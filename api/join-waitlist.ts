@@ -72,60 +72,80 @@ function createTransporter() {
     tls: {
       rejectUnauthorized: false,
     },
+    debug: true, // Enable debug logging
+    logger: true, // Enable logger
   });
 }
 
 // Send confirmation email to user
 async function sendUserEmail(transporter: any, name: string, email: string) {
-  const mailOptions = {
-    from: EMAIL_USER,
-    to: email,
-    subject: 'Welcome to ARCSTARZ Waitlist!',
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #000; margin-bottom: 20px;">Welcome to ARCSTARZ, ${name}!</h2>
-        <p style="color: #333; line-height: 1.6;">
-          Thank you for joining our waitlist! We're excited to bring you premium fashion that combines timeless elegance with contemporary design.
-        </p>
-        <p style="color: #333; line-height: 1.6;">
-          You'll be among the first to know when we launch. Keep an eye on your inbox for exclusive updates and early access opportunities.
-        </p>
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-          <p style="color: #666; font-size: 14px;">
-            Best regards,<br>
-            The ARCSTARZ Team<br>
-            <em>Faith in Motion</em>
+  try {
+    // Verify transporter connection first
+    await transporter.verify();
+    console.log('SMTP connection verified successfully');
+    
+    const mailOptions = {
+      from: EMAIL_USER,
+      to: email,
+      subject: 'Welcome to ARCSTARZ Waitlist!',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #000; margin-bottom: 20px;">Welcome to ARCSTARZ, ${name}!</h2>
+          <p style="color: #333; line-height: 1.6;">
+            Thank you for joining our waitlist! We're excited to bring you premium fashion that combines timeless elegance with contemporary design.
           </p>
+          <p style="color: #333; line-height: 1.6;">
+            You'll be among the first to know when we launch. Keep an eye on your inbox for exclusive updates and early access opportunities.
+          </p>
+          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <p style="color: #666; font-size: 14px;">
+              Best regards,<br>
+              The ARCSTARZ Team<br>
+              <em>Faith in Motion</em>
+            </p>
+          </div>
         </div>
-      </div>
-    `,
-  };
+      `,
+    };
 
-  await transporter.sendMail(mailOptions);
+    const result = await transporter.sendMail(mailOptions);
+    console.log('User email sent successfully:', result.messageId);
+    return result;
+  } catch (error) {
+    console.error('Error sending user email:', error);
+    throw error;
+  }
 }
 
 // Send notification email to admin
 async function sendAdminEmail(transporter: any, name: string, email: string) {
-  const mailOptions = {
-    from: EMAIL_USER,
-    to: EMAIL_USER,
-    subject: 'New Waitlist Signup - ARCSTARZ',
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #000; margin-bottom: 20px;">New Waitlist Signup</h2>
-        <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-          <p style="margin: 5px 0;"><strong>Name:</strong> ${name}</p>
-          <p style="margin: 5px 0;"><strong>Email:</strong> ${email}</p>
-          <p style="margin: 5px 0;"><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+  try {
+    const mailOptions = {
+      from: EMAIL_USER,
+      to: EMAIL_USER,
+      subject: 'New Waitlist Signup - ARCSTARZ',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #000; margin-bottom: 20px;">New Waitlist Signup</h2>
+          <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+            <p style="margin: 5px 0;"><strong>Name:</strong> ${name}</p>
+            <p style="margin: 5px 0;"><strong>Email:</strong> ${email}</p>
+            <p style="margin: 5px 0;"><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+          </div>
+          <p style="color: #333; line-height: 1.6;">
+            A new person has joined the ARCSTARZ waitlist! They're excited about your upcoming launch.
+          </p>
         </div>
-        <p style="color: #333; line-height: 1.6;">
-          A new person has joined the ARCSTARZ waitlist! They're excited about your upcoming launch.
-        </p>
-      </div>
-    `,
-  };
+      `,
+    };
 
-  await transporter.sendMail(mailOptions);
+    const result = await transporter.sendMail(mailOptions);
+    console.log('Admin email sent successfully:', result.messageId);
+    return result;
+  } catch (error) {
+    console.error('Error sending admin email:', error);
+    throw error;
+  }
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -193,6 +213,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   } catch (error) {
     console.error('Waitlist signup error:', error);
-    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+    
+    // Provide specific error messages based on error type
+    let errorMessage = 'Internal server error';
+    
+    if (error.code === 'EAUTH') {
+      errorMessage = 'Email authentication failed. Please check SMTP credentials.';
+    } else if (error.code === 'ECONNECTION') {
+      errorMessage = 'Could not connect to email server. Please try again later.';
+    } else if (error.code === 'ENOTFOUND') {
+      errorMessage = 'Email server not found. Please check SMTP configuration.';
+    } else if (error.message && error.message.includes('self-signed certificate')) {
+      errorMessage = 'Email server certificate issue. Please try again later.';
+    }
+    
+    return res.status(500).json({ status: 'error', message: errorMessage });
   }
 }
