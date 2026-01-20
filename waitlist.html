@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARCSTARZ - Join the Waitlist</title>
+    <title>ARCSTARZ - Coming Soon</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            background-image: url('c:/Users/hp/OneDrive/Documents/Arcstarz/public/bg.png');
+            background-image: url('bg.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -19,208 +18,164 @@
         }
         
         .overlay {
-            background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.6) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: rgba(0, 0, 0, 0.6);
         }
         
-        .glass-morphism {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        .container {
+            text-align: center;
+            color: white;
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
         }
         
-        .input-field {
+        .brand {
+            font-size: 2rem;
+            font-weight: 200;
+            letter-spacing: 0.3em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .waitlist-text {
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+        
+        .tagline {
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .coming-soon {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+        
+        .waitlist-form {
+            display: flex;
+            gap: 6px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .email-input {
+            flex: 1;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(5px);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            outline: none;
+            backdrop-filter: blur(10px);
         }
         
-        .input-field:focus {
+        .email-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .email-input:focus {
             background: rgba(255, 255, 255, 0.15);
             border-color: rgba(255, 255, 255, 0.5);
-            outline: none;
         }
         
-        .btn-primary {
-            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+        .submit-btn {
+            background: white;
+            color: black;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        .submit-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-1px);
         }
         
-        .fade-in {
-            animation: fadeIn 1s ease-in;
+        .success-message {
+            display: none;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            backdrop-filter: blur(10px);
+            margin-top: 15px;
+            font-size: 0.85rem;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
         }
     </style>
 </head>
 <body>
     <div class="overlay">
-        <div class="container mx-auto px-4 py-8">
-            <div class="max-w-md mx-auto">
-                <div class="glass-morphism rounded-2xl p-8 text-white fade-in">
-                    <!-- Logo/Brand -->
-                    <div class="text-center mb-8">
-                        <h1 class="text-4xl font-bold mb-2">ARCSTARZ</h1>
-                        <p class="text-lg opacity-90">Faith in Motion</p>
-                    </div>
-                    
-                    <!-- Main Message -->
-                    <div class="text-center mb-8">
-                        <div class="mb-6">
-                            <i class="fas fa-hourglass-half text-4xl pulse"></i>
-                        </div>
-                        <h2 class="text-2xl font-semibold mb-4">Coming Soon</h2>
-                        <p class="text-base opacity-80 mb-6">
-                            Something extraordinary is on the horizon. Be the first to experience premium fashion that combines timeless elegance with contemporary design.
-                        </p>
-                        <div class="text-sm opacity-70">
-                            <i class="fas fa-lock mr-2"></i>
-                            Exclusive early access for waitlist members
-                        </div>
-                    </div>
-                    
-                    <!-- Waitlist Form -->
-                    <form id="waitlist-form" class="space-y-4">
-                        <div>
-                            <input 
-                                type="text" 
-                                id="name" 
-                                placeholder="Your Name" 
-                                class="input-field w-full px-4 py-3 rounded-lg text-white placeholder-gray-300 transition-all duration-300"
-                                required
-                            >
-                        </div>
-                        <div>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                placeholder="Your Email" 
-                                class="input-field w-full px-4 py-3 rounded-lg text-white placeholder-gray-300 transition-all duration-300"
-                                required
-                            >
-                        </div>
-                        <button 
-                            type="submit" 
-                            class="btn-primary w-full py-3 rounded-lg text-white font-semibold"
-                        >
-                            <i class="fas fa-bell mr-2"></i>
-                            Join the Waitlist
-                        </button>
-                    </form>
-                    
-                    <!-- Social Proof -->
-                    <div class="mt-8 pt-6 border-t border-white/20">
-                        <div class="text-center">
-                            <div class="text-sm opacity-70 mb-4">
-                                <i class="fas fa-users mr-2"></i>
-                                <span id="waitlist-count">1,247</span> fashion enthusiasts waiting
-                            </div>
-                            <div class="flex justify-center space-x-4">
-                                <a href="#" class="text-white/70 hover:text-white transition-colors">
-                                    <i class="fab fa-instagram text-xl"></i>
-                                </a>
-                                <a href="#" class="text-white/70 hover:text-white transition-colors">
-                                    <i class="fab fa-pinterest text-xl"></i>
-                                </a>
-                                <a href="#" class="text-white/70 hover:text-white transition-colors">
-                                    <i class="fab fa-tiktok text-xl"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Footer -->
-                <div class="text-center mt-8 text-white/60 text-sm">
-                    <p>&copy; 2026 ARCSTARZ. All rights reserved.</p>
-                    <p class="mt-2">Launching soon. Stay tuned.</p>
-                </div>
+        <div class="container">
+            <h1 class="brand">ARCSTARZ</h1>
+            <p class="waitlist-text">Join the waitlist</p>
+            
+            <form id="waitlist-form" class="waitlist-form">
+                <input 
+                    type="email" 
+                    class="email-input" 
+                    placeholder="Enter your email" 
+                    required
+                >
+                <button type="submit" class="submit-btn">Join</button>
+            </form>
+            
+            <div id="success-message" class="success-message">
+                <p>✓ You're on the list! We'll notify you when we launch.</p>
             </div>
+        </div>
+        
+        <div class="footer">
+            © 2026 ARCSTARZ
         </div>
     </div>
 
     <script>
-        // Form submission handler
         document.getElementById('waitlist-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
+            const email = this.querySelector('.email-input').value;
             
-            if (name && email) {
-                // Update waitlist count
-                const countElement = document.getElementById('waitlist-count');
-                const currentCount = parseInt(countElement.textContent.replace(',', ''));
-                countElement.textContent = (currentCount + 1).toLocaleString();
-                
-                // Show success message
-                const formContainer = this.parentElement;
-                formContainer.innerHTML = `
-                    <div class="text-center py-8">
-                        <div class="mb-6">
-                            <i class="fas fa-check-circle text-5xl text-green-400"></i>
-                        </div>
-                        <h3 class="text-2xl font-semibold mb-4">You're on the list!</h3>
-                        <p class="text-base opacity-80 mb-2">
-                            Thank you, ${name}!
-                        </p>
-                        <p class="text-sm opacity-70">
-                            We'll notify you at ${email} as soon as we launch.
-                        </p>
-                        <div class="mt-6">
-                            <button onclick="location.reload()" class="text-sm underline opacity-70 hover:opacity-100">
-                                Add another email
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                // Simulate saving to backend (in real app, this would be an API call)
-                console.log('Waitlist signup:', { name, email });
-            }
-        });
-        
-        // Add some interactive effects
-        document.querySelectorAll('.input-field').forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentElement.classList.add('scale-105');
-                this.parentElement.style.transition = 'transform 0.2s ease';
-            });
+            // Show success message
+            document.getElementById('success-message').style.display = 'block';
             
-            input.addEventListener('blur', function() {
-                this.parentElement.classList.remove('scale-105');
-            });
+            // Hide form
+            this.style.display = 'none';
+            
+            // Log the email (in real app, this would be sent to a server)
+            console.log('Waitlist signup:', email);
+            
+            // Reset after 3 seconds
+            setTimeout(() => {
+                this.reset();
+                this.style.display = 'flex';
+                document.getElementById('success-message').style.display = 'none';
+            }, 3000);
         });
-        
-        // Simulate live waitlist count updates
-        setInterval(() => {
-            const countElement = document.getElementById('waitlist-count');
-            const currentCount = parseInt(countElement.textContent.replace(',', ''));
-            const increment = Math.floor(Math.random() * 3) + 1;
-            countElement.textContent = (currentCount + increment).toLocaleString();
-        }, 30000); // Update every 30 seconds
     </script>
 </body>
 </html>
