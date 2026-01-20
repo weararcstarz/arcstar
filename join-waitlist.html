@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCSTARZ - Coming Soon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-image: url('bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        
+        .overlay {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        
+        .container {
+            text-align: center;
+            color: white;
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .brand {
+            font-size: 2rem;
+            font-weight: 200;
+            letter-spacing: 0.3em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .waitlist-text {
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+        
+        .tagline {
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .coming-soon {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+        
+        .waitlist-form {
+            display: flex;
+            gap: 6px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .email-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            outline: none;
+            backdrop-filter: blur(10px);
+        }
+        
+        .email-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .email-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .submit-btn {
+            background: white;
+            color: black;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-1px);
+        }
+        
+        .success-message {
+            display: none;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            backdrop-filter: blur(10px);
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+        
+        .submit-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .error-message {
+            display: none;
+            padding: 12px;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 4px;
+            backdrop-filter: blur(10px);
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div class="container">
+            <h1 class="brand">ARCSTARZ</h1>
+            <p class="waitlist-text">Join the waitlist</p>
+            
+            <form id="waitlist-form" class="waitlist-form">
+                <input 
+                    type="text" 
+                    name="name" 
+                    class="email-input" 
+                    placeholder="Your Name" 
+                    required
+                >
+                <input 
+                    type="email" 
+                    name="email" 
+                    class="email-input" 
+                    placeholder="Your Email" 
+                    required
+                >
+                <button type="submit" class="submit-btn">Join</button>
+            </form>
+            
+            <div id="success-message" class="success-message">
+                <p>✓ You're on the list! Check your email for confirmation.</p>
+            </div>
+            
+            <div id="error-message" class="error-message">
+                <p id="error-text">Something went wrong. Please try again.</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            © 2026 ARCSTARZ
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const submitBtn = form.querySelector('.submit-btn');
+            const successMsg = document.getElementById('success-message');
+            const errorMsg = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            
+            // Get form data
+            const formData = new FormData(form);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading"></span>';
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+            
+            try {
+                // Send data to backend
+                const response = await fetch('/api/join-waitlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, email }),
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    // Show success message
+                    successMsg.style.display = 'block';
+                    form.style.display = 'none';
+                    
+                    // Log success
+                    console.log('Waitlist signup successful:', { name, email });
+                    
+                    // Reset form after 3 seconds
+                    setTimeout(() => {
+                        form.reset();
+                        form.style.display = 'flex';
+                        successMsg.style.display = 'none';
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Join';
+                    }, 3000);
+                } else {
+                    // Show error message
+                    errorText.textContent = result.message || 'Something went wrong. Please try again.';
+                    errorMsg.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Join';
+                }
+            } catch (error) {
+                // Show network error
+                console.error('Waitlist signup error:', error);
+                errorText.textContent = 'Network error. Please check your connection and try again.';
+                errorMsg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Join';
+            }
+        });
+    </script>
+</body>
+</html>

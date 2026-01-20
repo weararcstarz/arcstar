@@ -1,0 +1,24 @@
+{
+  "name": "arcstarz-waitlist",
+  "version": "1.0.0",
+  "description": "ARCSTARZ waitlist backend",
+  "main": "api/join-waitlist.ts",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "tsc",
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "@vercel/node": "^3.0.0",
+    "nodemailer": "^6.9.7"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.14",
+    "@types/node": "^20.8.0",
+    "typescript": "^5.2.2",
+    "vercel": "^32.4.1"
+  },
+  "keywords": ["waitlist", "arcstarz", "fashion", "backend"],
+  "author": "ARCSTARZ",
+  "license": "MIT"
+}
