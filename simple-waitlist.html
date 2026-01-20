@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCSTARZ - Join Waitlist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-image: url('c:/Users/hp/OneDrive/Documents/Arcstarz/public/bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .overlay {
+            background: rgba(0,0,0,0.5);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .waitlist-btn {
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 24px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .waitlist-btn:hover {
+            background: rgba(0,0,0,0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .form-container {
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+        
+        .input-field {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        
+        .input-field::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .submit-btn {
+            background: black;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <div id="button-container">
+            <button class="waitlist-btn" onclick="showForm()">
+                Join the Waitlist
+            </button>
+        </div>
+        
+        <div id="form-container" class="form-container">
+            <h3 style="color: white; margin-bottom: 15px; text-align: center;">ARCSTARZ</h3>
+            <form id="waitlist-form">
+                <input type="text" class="input-field" placeholder="Your Name" required>
+                <input type="email" class="input-field" placeholder="Your Email" required>
+                <button type="submit" class="submit-btn">Join</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showForm() {
+            document.getElementById('button-container').style.display = 'none';
+            document.getElementById('form-container').style.display = 'block';
+        }
+        
+        document.getElementById('waitlist-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for joining the waitlist!');
+            this.reset();
+            document.getElementById('form-container').style.display = 'none';
+            document.getElementById('button-container').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
