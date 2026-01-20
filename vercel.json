@@ -43,8 +43,5 @@
       "src": "/index",
       "dest": "/index.html"
     }
-  ],
-  "env": {
-    "EMAIL_PASS": "@email_pass"
-  }
+  ]
 }
