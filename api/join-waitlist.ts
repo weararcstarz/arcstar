@@ -4,10 +4,10 @@ import fs from 'fs';
 import path from 'path';
 
 // Environment variables
-const EMAIL_USER = 'support@arcstarz.shop';
+const EMAIL_USER = process.env.EMAIL_USER || 'support@arcstarz.shop';
 const EMAIL_PASS = process.env.EMAIL_PASS;
-const SMTP_SERVER = 'mail.privateemail.com';
-const SMTP_PORT = 587;
+const SMTP_SERVER = process.env.SMTP_SERVER || 'mail.privateemail.com';
+const SMTP_PORT = parseInt(process.env.SMTP_PORT || '587');
 
 // Waitlist data file path
 const WAITLIST_FILE = path.join(process.cwd(), 'waitlist.json');
