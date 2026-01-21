@@ -154,3 +154,82 @@ body {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    max-width: 320px;
+    padding: 0 15px;
+  }
+  
+  .brand {
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .waitlist-text {
+    font-size: 0.7rem;
+    margin-bottom: 1rem;
+  }
+  
+  .waitlist-form {
+    max-width: 280px;
+    gap: 10px;
+  }
+  
+  .email-input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .submit-btn {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+  
+  .success-message {
+    font-size: 1rem;
+    padding: 15px;
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    max-width: 280px;
+    padding: 0 10px;
+  }
+  
+  .brand {
+    font-size: 1.3rem;
+  }
+  
+  .waitlist-text {
+    font-size: 0.65rem;
+  }
+  
+  .waitlist-form {
+    max-width: 250px;
+    gap: 8px;
+  }
+  
+  .email-input {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .submit-btn {
+    padding: 8px 15px;
+    font-size: 0.85rem;
+  }
+  
+  .success-message {
+    font-size: 0.9rem;
+    padding: 12px;
+    margin-top: 12px;
+  }
+  
+  .footer {
+    font-size: 0.7rem;
+  }
+}
