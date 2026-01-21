@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .result {
+            margin: 20px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>API Test Page</h1>
+    
+    <button class="test-btn" onclick="testAPI()">Test API</button>
+    <button class="test-btn" onclick="testWaitlist()">Test Waitlist</button>
+    
+    <div id="result" class="result">Click a button to test...</div>
+
+    <script>
+        async function testAPI() {
+            const result = document.getElementById('result');
+            result.innerHTML = 'Testing API...';
+            
+            try {
+                const response = await fetch('/api/test');
+                const data = await response.json();
+                result.innerHTML = `
+                    <h3>API Test Result:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                result.innerHTML = `
+                    <h3>API Test Error:</h3>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+        
+        async function testWaitlist() {
+            const result = document.getElementById('result');
+            result.innerHTML = 'Testing waitlist...';
+            
+            try {
+                const response = await fetch('/api/join-waitlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        name: 'Test User', 
+                        email: 'test@example.com' 
+                    }),
+                });
+                
+                const data = await response.json();
+                result.innerHTML = `
+                    <h3>Waitlist Test Result:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                result.innerHTML = `
+                    <h3>Waitlist Test Error:</h3>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
