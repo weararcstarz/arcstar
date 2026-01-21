@@ -79,20 +79,24 @@
                 
                 if (result.status === 'success') {
                     // Show success message
+                    console.log('Showing success message...');
                     successMsg.style.display = 'block';
                     form.style.display = 'none';
                     
                     // Log success
                     console.log('Waitlist signup successful:', { name, email });
+                    console.log('Success message element:', successMsg);
+                    console.log('Success message display style:', successMsg.style.display);
                     
-                    // Reset form after 3 seconds
+                    // Reset form after 10 seconds (longer for visibility)
                     setTimeout(() => {
+                        console.log('Resetting form after success...');
                         form.reset();
                         form.style.display = 'flex';
                         successMsg.style.display = 'none';
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'Join';
-                    }, 3000);
+                    }, 10000);
                 } else {
                     // Show error message
                     errorText.textContent = result.message || 'Something went wrong. Please try again.';
