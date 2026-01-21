@@ -4,20 +4,8 @@ const path = require('path');
 
 const app = express();
 
-// Serve static files first (CSS, JS, images)
-app.use(express.static('.', {
-  setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.css')) {
-      res.setHeader('Content-Type', 'text/css');
-    }
-    if (filePath.endsWith('.js')) {
-      res.setHeader('Content-Type', 'application/javascript');
-    }
-    if (filePath.endsWith('.png')) {
-      res.setHeader('Content-Type', 'image/png');
-    }
-  }
-}));
+// Serve static files from public folder (Express handles MIME types automatically)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Handle HTML routes
 app.get('/', (req, res) => {
