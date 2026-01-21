@@ -149,8 +149,17 @@ async function sendAdminEmail(transporter: any, name: string, email: string) {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Add request logging for debugging
+  console.log('API Request received:', {
+    method: req.method,
+    headers: req.headers,
+    body: req.body,
+    timestamp: new Date().toISOString()
+  });
+
   // Only allow POST requests
   if (req.method !== 'POST') {
+    console.log('Method not allowed:', req.method);
     return res.status(405).json({ status: 'error', message: 'Method not allowed' });
   }
 
@@ -162,20 +171,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Handle preflight requests
     if (req.method === 'OPTIONS') {
+      console.log('Handling preflight request');
       return res.status(200).end();
     }
 
     const { name, email } = req.body;
+    console.log('Form data received:', { name, email });
 
     // Validate input
     const validation = validateInput(name || '', email || '');
     if (!validation.isValid) {
+      console.log('Validation failed:', validation.message);
       return res.status(400).json({ status: 'error', message: validation.message });
     }
 
     // Sanitize input
     const sanitizedName = sanitizeInput(name);
     const sanitizedEmail = sanitizeInput(email);
+    console.log('Sanitized data:', { name: sanitizedName, email: sanitizedEmail });
 
     // Check if email already exists
     const waitlistData = readWaitlistData();
@@ -185,7 +198,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Create email transporter
+    console.log('Environment variables check:', {
+      EMAIL_USER: EMAIL_USER,
+      EMAIL_PASS: EMAIL_PASS ? '***SET***' : 'NOT_SET',
+      SMTP_SERVER: SMTP_SERVER,
+      SMTP_PORT: SMTP_PORT
+    });
+    
     if (!EMAIL_PASS) {
+      console.log('Email service not configured - EMAIL_PASS missing');
       return res.status(500).json({ status: 'error', message: 'Email service not configured' });
     }
 
