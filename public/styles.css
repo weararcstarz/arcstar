@@ -169,6 +169,14 @@ body {
     background-repeat: no-repeat !important;
     background-attachment: fixed !important;
     min-height: 100vh !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .overlay {
+    min-height: 100vh !important;
+    height: 100vh !important;
   }
   
   .container {
@@ -228,6 +236,22 @@ body {
 }
 
 @media (max-width: 480px) {
+  body {
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+    min-height: 100vh !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .overlay {
+    min-height: 100vh !important;
+    height: 100vh !important;
+  }
+  
   .container {
     max-width: 280px;
     padding: 0 10px;
