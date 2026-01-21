@@ -61,7 +61,7 @@ function saveWaitlistData(data: any[]): void {
 
 // Create email transporter
 function createTransporter() {
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: SMTP_SERVER,
     port: SMTP_PORT,
     secure: false, // STARTTLS
@@ -157,12 +157,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     timestamp: new Date().toISOString()
   });
 
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    console.log('Method not allowed:', req.method);
-    return res.status(405).json({ status: 'error', message: 'Method not allowed' });
-  }
-
   try {
     // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -173,6 +167,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (req.method === 'OPTIONS') {
       console.log('Handling preflight request');
       return res.status(200).end();
+    }
+
+    // Only allow POST requests
+    if (req.method !== 'POST') {
+      console.log('Method not allowed:', req.method);
+      return res.status(405).json({ status: 'error', message: 'Method not allowed' });
     }
 
     const { name, email } = req.body;
@@ -232,7 +232,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Return success response
     return res.status(200).json({ status: 'success', message: 'Successfully joined waitlist' });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Waitlist signup error:', error);
     
     // Provide specific error messages based on error type
