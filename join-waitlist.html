@@ -61,6 +61,27 @@
     </div>
 
     <script>
+        // Force video playback on mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.querySelector('.video-background');
+            if (video) {
+                // Try to play video
+                video.play().catch(function(error) {
+                    console.log('Video autoplay failed:', error);
+                    // Add click to play for mobile
+                    document.body.addEventListener('click', function() {
+                        video.play().catch(e => console.log('Video play failed:', e));
+                    }, { once: true });
+                });
+                
+                // Ensure video loops
+                video.addEventListener('ended', function() {
+                    video.currentTime = 0;
+                    video.play().catch(e => console.log('Video replay failed:', e));
+                });
+            }
+        });
+        
         console.log('JavaScript loaded successfully');
         
         const form = document.getElementById('waitlist-form');
