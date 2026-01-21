@@ -16,12 +16,6 @@ body {
   background-attachment: fixed;
 }
 
-/* Black background for non-waitlist pages */
-body:not(.waitlist-page) {
-  background-image: none !important;
-  background-color: #000000 !important;
-}
-
 .overlay {
   min-height: 100vh;
   display: flex;
@@ -185,13 +179,8 @@ body:not(.waitlist-page) {
     overflow-x: hidden !important;
   }
   
-  body.waitlist-page {
+  body {
     background-image: url('/bg.png') !important;
-  }
-  
-  body:not(.waitlist-page) {
-    background-image: none !important;
-    background-color: #000000 !important;
   }
   
   .overlay {
@@ -265,13 +254,8 @@ body:not(.waitlist-page) {
     overflow-x: hidden !important;
   }
   
-  body.waitlist-page {
+  body {
     background-image: url('/bg.png') !important;
-  }
-  
-  body:not(.waitlist-page) {
-    background-image: none !important;
-    background-color: #000000 !important;
   }
   
   .overlay {
