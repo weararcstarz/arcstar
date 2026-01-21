@@ -40,7 +40,16 @@ body {
   font-size: 2rem;
   font-weight: 200;
   letter-spacing: 0.3em;
+  margin-bottom: 0.3rem;
+}
+
+.coming-soon {
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
   margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 300;
+  text-transform: uppercase;
 }
 
 .waitlist-text {
@@ -167,6 +176,11 @@ body {
     margin-bottom: 0.3rem;
   }
   
+  .coming-soon {
+    font-size: 0.8rem;
+    margin-bottom: 0.4rem;
+  }
+  
   .waitlist-text {
     font-size: 0.7rem;
     margin-bottom: 1rem;
@@ -202,6 +216,11 @@ body {
   
   .brand {
     font-size: 1.3rem;
+  }
+  
+  .coming-soon {
+    font-size: 0.7rem;
+    margin-bottom: 0.3rem;
   }
   
   .waitlist-text {
