@@ -1,7 +1,14 @@
-// Vercel server entrypoint
-// This file satisfies Vercel's entrypoint requirements
+// Vercel server entrypoint with Express
+const express = require('express');
 
-module.exports = function handler(req, res) {
+const app = express();
+
+// Middleware
+app.use(express.json());
+app.use(express.static('.'));
+
+// Root endpoint
+app.get('/', (req, res) => {
   res.status(200).json({ 
     status: 'ok',
     message: 'ARCSTARZ Waitlist API Server',
@@ -9,4 +16,12 @@ module.exports = function handler(req, res) {
       waitlist: '/api/join-waitlist'
     }
   });
-};
+});
+
+// Health check
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'healthy' });
+});
+
+// Export for Vercel
+module.exports = app;
