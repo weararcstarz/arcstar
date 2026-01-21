@@ -70,15 +70,6 @@ body {
   backdrop-filter: blur(10px);
 }
 
-.email-input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.email-input:focus {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
 .submit-btn {
   background: white;
   color: black;
@@ -88,12 +79,6 @@ body {
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.submit-btn:hover {
-  background: #f0f0f0;
-  transform: translateY(-1px);
 }
 
 .submit-btn:disabled {
@@ -160,14 +145,7 @@ body {
 .social-icon {
   color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
-  transition: all 0.3s ease;
   opacity: 0.8;
-}
-
-.social-icon:hover {
-  color: rgba(255, 255, 255, 1);
-  opacity: 1;
-  transform: scale(1.1);
 }
 
 .social-icon svg {
@@ -181,11 +159,6 @@ body {
   border: 2px solid #ffffff;
   border-radius: 50%;
   border-top-color: transparent;
-  animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 /* Mobile Responsive Design */
