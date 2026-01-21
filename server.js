@@ -1,5 +1,6 @@
 // Vercel server entrypoint with Express
 const express = require('express');
+const path = require('path');
 
 const app = express();
 
@@ -7,8 +8,8 @@ const app = express();
 app.use(express.json());
 app.use(express.static('.'));
 
-// Root endpoint
-app.get('/', (req, res) => {
+// API Routes
+app.get('/api', (req, res) => {
   res.status(200).json({ 
     status: 'ok',
     message: 'ARCSTARZ Waitlist API Server',
@@ -21,6 +22,23 @@ app.get('/', (req, res) => {
 // Health check
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy' });
+});
+
+// Serve HTML files for specific routes
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'join-waitlist.html'));
+});
+
+app.get('/join-waitlist', (req, res) => {
+  res.sendFile(path.join(__dirname, 'join-waitlist.html'));
+});
+
+app.get('/waitlist', (req, res) => {
+  res.sendFile(path.join(__dirname, 'waitlist.html'));
+});
+
+app.get('/index', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Export for Vercel
