@@ -150,6 +150,30 @@ body {
   margin-left: 8px;
 }
 
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+
+.social-icon {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  opacity: 0.8;
+}
+
+.social-icon:hover {
+  color: rgba(255, 255, 255, 1);
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.social-icon svg {
+  display: block;
+}
+
 .loading {
   display: inline-block;
   width: 12px;
@@ -238,6 +262,16 @@ body {
     font-size: 0.6rem;
     margin-left: 5px;
   }
+  
+  .social-icons {
+    gap: 15px;
+    margin-bottom: 8px;
+  }
+  
+  .social-icon svg {
+    width: 18px;
+    height: 18px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -310,5 +344,15 @@ body {
   .footer .coming-soon {
     font-size: 0.5rem;
     margin-left: 4px;
+  }
+  
+  .social-icons {
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  
+  .social-icon svg {
+    width: 16px;
+    height: 16px;
   }
 }
