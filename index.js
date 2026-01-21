@@ -1,15 +1,35 @@
 // Vercel entrypoint with Express
 const express = require('express');
+const path = require('path');
 
 const app = express();
 
-// Middleware
-app.use(express.json());
-app.use(express.static('.'));
+// Middleware for static files with proper MIME types
+app.use(express.static('.', {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+    if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
+  }
+}));
 
-// Root endpoint
+app.use(express.json());
+
+// Root endpoint - serve HTML file
 app.get('/', (req, res) => {
-  res.sendFile(require('path').join(__dirname, 'join-waitlist.html'));
+  res.sendFile(path.join(__dirname, 'join-waitlist.html'));
+});
+
+// Other routes
+app.get('/join-waitlist', (req, res) => {
+  res.sendFile(path.join(__dirname, 'join-waitlist.html'));
+});
+
+app.get('/waitlist', (req, res) => {
+  res.sendFile(path.join(__dirname, 'waitlist.html'));
 });
 
 // API info
