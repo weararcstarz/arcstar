@@ -50,15 +50,6 @@ body {
   opacity: 0.8;
 }
 
-.coming-soon {
-  font-size: 0.9rem;
-  letter-spacing: 0.2em;
-  margin-top: 2rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 300;
-  text-transform: uppercase;
-}
-
 .waitlist-form {
   display: flex;
   flex-direction: column;
@@ -150,6 +141,15 @@ body {
   text-align: center;
 }
 
+.footer .coming-soon {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 300;
+  text-transform: uppercase;
+  margin-left: 8px;
+}
+
 .loading {
   display: inline-block;
   width: 12px;
@@ -166,6 +166,18 @@ body {
 
 /* Mobile Responsive Design */
 @media (max-width: 768px) {
+  body {
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+    min-height: 100vh !important;
+  }
+  
+  .overlay {
+    min-height: 100vh !important;
+  }
+  
   .container {
     max-width: 320px;
     padding: 0 15px;
@@ -174,11 +186,6 @@ body {
   .brand {
     font-size: 1.5rem;
     margin-bottom: 0.3rem;
-  }
-  
-  .coming-soon {
-    font-size: 0.8rem;
-    margin-bottom: 0.4rem;
   }
   
   .waitlist-text {
@@ -206,9 +213,30 @@ body {
     padding: 15px;
     margin-top: 15px;
   }
+  
+  .footer {
+    font-size: 0.7rem;
+  }
+  
+  .footer .coming-soon {
+    font-size: 0.6rem;
+    margin-left: 5px;
+  }
 }
 
 @media (max-width: 480px) {
+  body {
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+    min-height: 100vh !important;
+  }
+  
+  .overlay {
+    min-height: 100vh !important;
+  }
+  
   .container {
     max-width: 280px;
     padding: 0 10px;
@@ -216,11 +244,6 @@ body {
   
   .brand {
     font-size: 1.3rem;
-  }
-  
-  .coming-soon {
-    font-size: 0.7rem;
-    margin-bottom: 0.3rem;
   }
   
   .waitlist-text {
@@ -249,6 +272,11 @@ body {
   }
   
   .footer {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
+  }
+  
+  .footer .coming-soon {
+    font-size: 0.5rem;
+    margin-left: 4px;
   }
 }
