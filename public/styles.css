@@ -25,6 +25,21 @@ body {
   background: #000 !important;
 }
 
+/* Mobile video optimizations */
+@media (pointer: coarse) and (hover: none) {
+  .video-background {
+    transform: scale(1.05) !important;
+  }
+}
+
+/* iOS video fix */
+@supports (-webkit-touch-callout: none) {
+  .video-background {
+    -webkit-transform: scale(1.05) !important;
+    transform: scale(1.05) !important;
+  }
+}
+
 .overlay {
   min-height: 100vh;
   display: flex;
@@ -177,6 +192,7 @@ body {
     height: 100vh !important;
     margin: 0 !important;
     padding: 0 !important;
+    background: #000 !important;
   }
   
   .video-background {
@@ -187,11 +203,14 @@ body {
     height: 100vh !important;
     object-fit: cover !important;
     z-index: -1 !important;
+    background: #000 !important;
+    transform: scale(1.1) !important;
   }
   
   .overlay {
     min-height: 100vh !important;
     height: 100vh !important;
+    background: rgba(0, 0, 0, 0.4) !important;
   }
   
   .container {
@@ -256,6 +275,7 @@ body {
     height: 100vh !important;
     margin: 0 !important;
     padding: 0 !important;
+    background: #000 !important;
   }
   
   .video-background {
@@ -266,11 +286,14 @@ body {
     height: 100vh !important;
     object-fit: cover !important;
     z-index: -1 !important;
+    background: #000 !important;
+    transform: scale(1.2) !important;
   }
   
   .overlay {
     min-height: 100vh !important;
     height: 100vh !important;
+    background: rgba(0, 0, 0, 0.3) !important;
   }
   
   .container {
