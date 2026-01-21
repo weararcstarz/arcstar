@@ -166,16 +166,32 @@ body {
 
 /* Mobile Responsive Design */
 @media (max-width: 768px) {
-  body {
+  html, body {
     background-size: cover !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
     background-attachment: fixed !important;
     min-height: 100vh !important;
+    height: 100vh !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+  }
+  
+  body {
+    background-image: url('/bg.png') !important;
   }
   
   .overlay {
     min-height: 100vh !important;
+    height: 100vh !important;
+    width: 100vw !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
   }
   
   .container {
@@ -225,16 +241,32 @@ body {
 }
 
 @media (max-width: 480px) {
-  body {
+  html, body {
     background-size: cover !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
     background-attachment: fixed !important;
     min-height: 100vh !important;
+    height: 100vh !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+  }
+  
+  body {
+    background-image: url('/bg.png') !important;
   }
   
   .overlay {
     min-height: 100vh !important;
+    height: 100vh !important;
+    width: 100vw !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
   }
   
   .container {
