@@ -30,7 +30,7 @@
                 <button type="submit" class="submit-btn">Join</button>
             </form>
             
-            <div id="success-message" class="success-message" style="display: block !important; background: rgba(0, 255, 0, 0.5) !important; border: 3px solid #00ff00 !important; font-size: 1.2rem !important; padding: 25px !important;">
+            <div id="success-message" class="success-message" style="display: none !important; background: rgba(0, 255, 0, 0.5) !important; border: 3px solid #00ff00 !important; font-size: 1.2rem !important; padding: 25px !important;">
                 <p>✓ You are now part of the waitlist!</p>
             </div>
             
@@ -45,74 +45,92 @@
     </div>
 
     <script>
-        document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const form = e.target;
-            const submitBtn = form.querySelector('.submit-btn');
-            const successMsg = document.getElementById('success-message');
-            const errorMsg = document.getElementById('error-message');
-            const errorText = document.getElementById('error-text');
-            
-            // Get form data
-            const formData = new FormData(form);
-            const name = formData.get('name');
-            const email = formData.get('email');
-            
-            // Show loading state
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="loading"></span>';
-            successMsg.style.display = 'none';
-            errorMsg.style.display = 'none';
-            
-            try {
-                // Send data to backend
-                const response = await fetch('/api/join-waitlist', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ name, email }),
-                });
+        console.log('JavaScript loaded successfully');
+        
+        const form = document.getElementById('waitlist-form');
+        const successMsg = document.getElementById('success-message');
+        const errorMsg = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
+        
+        console.log('Form elements found:', { form, successMsg, errorMsg, errorText });
+        
+        if (form) {
+            form.addEventListener('submit', async function(e) {
+                console.log('Form submitted!');
+                e.preventDefault();
                 
-                const result = await response.json();
+                const submitBtn = form.querySelector('.submit-btn');
                 
-                if (result.status === 'success') {
-                    // Show success message
-                    console.log('Showing success message...');
-                    successMsg.style.display = 'block';
-                    form.style.display = 'none';
+                // Get form data
+                const formData = new FormData(form);
+                const name = formData.get('name');
+                const email = formData.get('email');
+                
+                console.log('Form data:', { name, email });
+                
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="loading"></span>';
+                successMsg.style.display = 'none';
+                errorMsg.style.display = 'none';
+                
+                try {
+                    console.log('Sending API request...');
                     
-                    // Log success
-                    console.log('Waitlist signup successful:', { name, email });
-                    console.log('Success message element:', successMsg);
-                    console.log('Success message display style:', successMsg.style.display);
+                    // Send data to backend
+                    const response = await fetch('/api/join-waitlist', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ name, email }),
+                    });
                     
-                    // Reset form after 10 seconds (longer for visibility)
-                    setTimeout(() => {
-                        console.log('Resetting form after success...');
-                        form.reset();
-                        form.style.display = 'flex';
-                        successMsg.style.display = 'none';
+                    console.log('API response received:', response.status);
+                    
+                    const result = await response.json();
+                    console.log('API result:', result);
+                    
+                    if (result.status === 'success') {
+                        // Show success message
+                        console.log('Showing success message...');
+                        successMsg.style.display = 'block';
+                        form.style.display = 'none';
+                        
+                        // Log success
+                        console.log('Waitlist signup successful:', { name, email });
+                        console.log('Success message element:', successMsg);
+                        console.log('Success message display style:', successMsg.style.display);
+                        
+                        // Reset form after 10 seconds
+                        setTimeout(() => {
+                            console.log('Resetting form after success...');
+                            form.reset();
+                            form.style.display = 'flex';
+                            successMsg.style.display = 'none';
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Join';
+                        }, 10000);
+                    } else {
+                        // Show error message
+                        console.log('API returned error:', result.message);
+                        errorText.textContent = result.message || 'Something went wrong. Please try again.';
+                        errorMsg.style.display = 'block';
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'Join';
-                    }, 10000);
-                } else {
-                    // Show error message
-                    errorText.textContent = result.message || 'Something went wrong. Please try again.';
+                    }
+                } catch (error) {
+                    // Show network error
+                    console.error('Waitlist signup error:', error);
+                    errorText.textContent = 'Network error. Please check your connection and try again.';
                     errorMsg.style.display = 'block';
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Join';
                 }
-            } catch (error) {
-                // Show network error
-                console.error('Waitlist signup error:', error);
-                errorText.textContent = 'Network error. Please check your connection and try again.';
-                errorMsg.style.display = 'block';
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Join';
-            }
-        });
+            });
+        } else {
+            console.error('Form not found!');
+        }
     </script>
 </body>
 </html>
