@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArcStarz | Premium Streetwear Brand</title>
+    <meta name="description" content="ArcStarz is a premium minimalist streetwear brand offering high-quality fashion." />
+    <meta name="robots" content="index, follow" />
+    <link rel="stylesheet" href="/styles.css">
+    
+    <!-- Favicon and Web App Icons -->
+    <link rel="icon" type="image/png" href="/webicon.png">
+    <link rel="apple-touch-icon" href="/webicon.png">
+    <link rel="shortcut icon" href="/webicon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#000000">
+</head>
+<body>
+    <video class="video-background" autoplay muted loop playsinline preload="auto">
+        <source src="/background.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="overlay">
+        <div class="container">
+            <h1 class="brand">ARCSTARZ</h1>
+            <p class="waitlist-text">Join the waitlist</p>
+            
+            <form id="waitlist-form" class="waitlist-form">
+                <input 
+                    type="text" 
+                    name="name" 
+                    class="email-input" 
+                    placeholder="Your Name" 
+                    required
+                >
+                <input 
+                    type="email" 
+                    name="email" 
+                    class="email-input" 
+                    placeholder="Your Email" 
+                    required
+                >
+                <button type="submit" class="submit-btn">Join</button>
+            </form>
+            
+            <div id="success-message" class="success-message" style="display: none !important; background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.3) !important; font-size: 1.1rem !important; padding: 20px !important; font-weight: 500 !important; letter-spacing: 0.5px !important;">
+                <p>✓ You are now part of the waitlist!</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="social-icons">
+                <a href="https://instagram.com/arcstarzke" target="_blank" class="social-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1 1 12.324 0 6.162 6.162 0 0 1-12.324 0zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm4.965-10.405a1.44 1.44 0 1 1 2.881.001 1.44 1.44 0 0 1-2.881-.001z"/>
+                    </svg>
+                </a>
+                <a href="https://tiktok.com/@arcstarzke" target="_blank" class="social-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.36-4.08-1.1-1.75-1.01-3.06-2.84-3.32-4.9-.03-.26-.06-.51-.06-.78.07-1.7.87-3.33 2.22-4.41 1.35-1.09 3.08-1.62 4.8-1.48.01 1.48-.03 2.96-.04 4.44-.61-.13-1.28-.09-1.84.23-.74.44-1.21 1.29-1.2 2.15.01.66.27 1.31.73 1.78.52.55 1.28.84 2.04.75 1.1-.15 2.01-1.15 2.07-2.26.03-1.84.01-3.67.02-5.51.01-4.03-.01-8.05.02-12.07z"/>
+                    </svg>
+                </a>
+            </div>
+            © 2026 ARCSTARZ <span class="coming-soon">Coming Soon</span>
+        </div>
+    </div>
+
+    <script>
+        // Force video playback on mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.querySelector('.video-background');
+            if (video) {
+                // Try to play video
+                video.play().catch(function(error) {
+                    console.log('Video autoplay failed:', error);
+                    // Add click to play for mobile
+                    document.body.addEventListener('click', function() {
+                        video.play().catch(e => console.log('Video play failed:', e));
+                    }, { once: true });
+                });
+                
+                // Ensure video loops
+                video.addEventListener('ended', function() {
+                    video.currentTime = 0;
+                    video.play().catch(e => console.log('Video replay failed:', e));
+                });
+            }
+        });
+        
+        document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const submitBtn = form.querySelector('.submit-btn');
+            const successMsg = document.getElementById('success-message');
+            const errorMsg = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            
+            // Get form data
+            const formData = new FormData(form);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading"></span>';
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+            
+            try {
+                // Send data to backend
+                const response = await fetch('/api/join-waitlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, email }),
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    // Show success message
+                    successMsg.style.display = 'block';
+                    form.style.display = 'none';
+                    
+                    // Log success
+                    console.log('Waitlist signup successful:', { name, email });
+                    
+                    // Reset form after 3 seconds
+                    setTimeout(() => {
+                        form.reset();
+                        form.style.display = 'flex';
+                        successMsg.style.display = 'none';
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Join';
+                    }, 3000);
+                } else {
+                    // Show error message
+                    errorText.textContent = result.message || 'Something went wrong. Please try again.';
+                    errorMsg.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Join';
+                }
+            } catch (error) {
+                // Show network error
+                console.error('Waitlist signup error:', error);
+                errorText.textContent = 'Network error. Please check your connection and try again.';
+                errorMsg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Join';
+            }
+        });
+    </script>
+</body>
+</html>

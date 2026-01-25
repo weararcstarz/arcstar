@@ -10,15 +10,21 @@
   },
   "dependencies": {
     "@vercel/node": "^3.0.0",
-    "nodemailer": "^6.9.7"
+    "express": "^4.18.2",
+    "nodemailer": "^6.10.1"
   },
   "devDependencies": {
-    "@types/nodemailer": "^6.4.14",
     "@types/node": "^20.8.0",
+    "@types/nodemailer": "^6.4.14",
     "typescript": "^5.2.2",
     "vercel": "^32.4.1"
   },
-  "keywords": ["waitlist", "arcstarz", "fashion", "backend"],
+  "keywords": [
+    "waitlist",
+    "arcstarz",
+    "fashion",
+    "backend"
+  ],
   "author": "ARCSTARZ",
   "license": "MIT"
 }
