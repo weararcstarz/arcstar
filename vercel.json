@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/join-waitlist.html"
+    },
+    {
+      "src": "/join-waitlist",
+      "dest": "/join-waitlist.html"
+    },
+    {
+      "src": "/waitlist",
+      "dest": "/waitlist.html"
+    },
+    {
+      "src": "/index",
+      "dest": "/index.html"
+    }
+  ]
+}
