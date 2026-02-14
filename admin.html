@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARCSTARZ Admin</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0d0d0d;
+      color: #f5f5f5;
+    }
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .card {
+      background: #171717;
+      border: 1px solid #2b2b2b;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    h1, h2 {
+      margin: 0 0 12px;
+      font-weight: 600;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    input, textarea, button {
+      border-radius: 8px;
+      border: 1px solid #3a3a3a;
+      background: #111;
+      color: #f5f5f5;
+      padding: 10px;
+      font-size: 14px;
+    }
+    input, textarea {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      cursor: pointer;
+      background: #fff;
+      color: #111;
+      border: none;
+      font-weight: 600;
+      min-width: 120px;
+    }
+    .muted {
+      color: #b3b3b3;
+      font-size: 13px;
+    }
+    .hidden {
+      display: none;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      border-bottom: 1px solid #2a2a2a;
+      text-align: left;
+      padding: 10px 6px;
+      vertical-align: top;
+      word-break: break-word;
+    }
+    .status {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #cfcfcf;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>ARCSTARZ Admin</h1>
+    <p class="muted">Private panel: view all waitlist emails and send one message to everyone.</p>
+
+    <div id="loginCard" class="card">
+      <h2>Login</h2>
+      <div class="row">
+        <input id="password" type="password" placeholder="Admin password">
+        <button id="loginBtn">Login</button>
+      </div>
+      <div id="loginStatus" class="status"></div>
+    </div>
+
+    <div id="panel" class="hidden">
+      <div class="card">
+        <div class="row" style="justify-content: space-between; align-items: center;">
+          <h2 style="margin:0;">Subscribers</h2>
+          <div class="row">
+            <button id="refreshBtn">Refresh</button>
+            <button id="logoutBtn">Logout</button>
+          </div>
+        </div>
+        <p id="countText" class="muted">Count: 0</p>
+        <div style="overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Signed Up</th>
+              </tr>
+            </thead>
+            <tbody id="subscribersBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Send Bulk Email</h2>
+        <div class="row">
+          <input id="subject" type="text" placeholder="Email subject">
+        </div>
+        <div class="row" style="margin-top: 10px;">
+          <textarea id="message" rows="8" placeholder="Write your message to all subscribers..."></textarea>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+          <button id="sendBtn">Send To All</button>
+        </div>
+        <div id="sendStatus" class="status"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tokenKey = 'arcstarz_admin_token';
+
+    const loginCard = document.getElementById('loginCard');
+    const panel = document.getElementById('panel');
+    const loginStatus = document.getElementById('loginStatus');
+    const sendStatus = document.getElementById('sendStatus');
+    const subscribersBody = document.getElementById('subscribersBody');
+    const countText = document.getElementById('countText');
+
+    function getToken() {
+      return sessionStorage.getItem(tokenKey) || '';
+    }
+
+    function setToken(token) {
+      sessionStorage.setItem(tokenKey, token);
+    }
+
+    function clearToken() {
+      sessionStorage.removeItem(tokenKey);
+    }
+
+    async function api(path, options = {}) {
+      const token = getToken();
+      const headers = Object.assign({ 'Content-Type': 'application/json' }, options.headers || {});
+      if (token) headers.Authorization = `Bearer ${token}`;
+      const res = await fetch(path, Object.assign({}, options, { headers }));
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || 'Request failed');
+      return data;
+    }
+
+    function setLoggedIn(yes) {
+      loginCard.classList.toggle('hidden', yes);
+      panel.classList.toggle('hidden', !yes);
+    }
+
+    function renderSubscribers(items) {
+      subscribersBody.innerHTML = '';
+      items.forEach((item) => {
+        const tr = document.createElement('tr');
+        const when = item.timestamp ? new Date(item.timestamp).toLocaleString() : '';
+        tr.innerHTML = `<td>${item.name || ''}</td><td>${item.email || ''}</td><td>${when}</td>`;
+        subscribersBody.appendChild(tr);
+      });
+    }
+
+    async function loadSubscribers() {
+      const result = await api('/api/admin', { method: 'GET' });
+      countText.textContent = `Count: ${result.count}`;
+      renderSubscribers(result.subscribers || []);
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const password = document.getElementById('password').value;
+      loginStatus.textContent = 'Logging in...';
+      try {
+        const result = await api('/api/admin', {
+          method: 'POST',
+          body: JSON.stringify({ action: 'login', password }),
+        });
+        setToken(result.token);
+        setLoggedIn(true);
+        loginStatus.textContent = '';
+        await loadSubscribers();
+      } catch (err) {
+        loginStatus.textContent = err.message;
+      }
+    });
+
+    document.getElementById('refreshBtn').addEventListener('click', async () => {
+      try {
+        await loadSubscribers();
+      } catch (err) {
+        sendStatus.textContent = err.message;
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      clearToken();
+      setLoggedIn(false);
+      sendStatus.textContent = '';
+    });
+
+    document.getElementById('sendBtn').addEventListener('click', async () => {
+      const subject = document.getElementById('subject').value;
+      const message = document.getElementById('message').value;
+      sendStatus.textContent = 'Sending...';
+      try {
+        const result = await api('/api/admin', {
+          method: 'POST',
+          body: JSON.stringify({ action: 'send-broadcast', subject, message }),
+        });
+        sendStatus.textContent = `Done. Sent: ${result.sent}, Failed: ${result.failed}`;
+      } catch (err) {
+        sendStatus.textContent = err.message;
+      }
+    });
+
+    (async function init() {
+      const token = getToken();
+      if (!token) return;
+      try {
+        setLoggedIn(true);
+        await loadSubscribers();
+      } catch {
+        clearToken();
+        setLoggedIn(false);
+      }
+    })();
+  </script>
+</body>
+</html>
