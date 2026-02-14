@@ -28,13 +28,13 @@ body {
 }
 
 .container {
-  width: min(86vw, 340px);
+  width: min(82vw, 300px);
   margin-top: clamp(12vh, 16vh, 20vh);
   text-align: center;
 }
 
 .brand {
-  font-size: clamp(1.8rem, 6.2vw, 2.7rem);
+  font-size: clamp(1.55rem, 5.4vw, 2.25rem);
   font-weight: 300;
   letter-spacing: 0.22em;
   margin-bottom: 0.3rem;
@@ -42,7 +42,7 @@ body {
 }
 
 .waitlist-text {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   letter-spacing: 0.06em;
   margin-bottom: 1rem;
   opacity: 0.95;
@@ -51,7 +51,7 @@ body {
 .waitlist-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .email-input {
@@ -59,9 +59,9 @@ body {
   background: rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.55);
   color: #ffffff;
-  padding: 11px 12px;
+  padding: 9px 10px;
   border-radius: 8px;
-  font-size: 0.92rem;
+  font-size: 0.84rem;
   outline: none;
   backdrop-filter: blur(4px);
 }
@@ -81,9 +81,9 @@ body {
   background: #ffffff;
   color: #111111;
   border: none;
-  padding: 11px 14px;
+  padding: 9px 12px;
   border-radius: 8px;
-  font-size: 1.15rem;
+  font-size: 0.98rem;
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s ease;
@@ -188,27 +188,27 @@ body {
   }
 
   .container {
-    width: min(90vw, 320px);
+    width: min(88vw, 280px);
     margin-top: clamp(8vh, 12vh, 16vh);
   }
 
   .brand {
-    font-size: clamp(1.6rem, 8vw, 2.2rem);
+    font-size: clamp(1.35rem, 7vw, 1.9rem);
     letter-spacing: 0.18em;
   }
 
   .waitlist-text {
-    font-size: 0.82rem;
+    font-size: 0.75rem;
   }
 
   .email-input {
-    padding: 10px 11px;
-    font-size: 0.86rem;
+    padding: 8px 10px;
+    font-size: 0.8rem;
   }
 
   .submit-btn {
-    font-size: 1.02rem;
-    padding: 10px 12px;
+    font-size: 0.92rem;
+    padding: 8px 10px;
   }
 }
 
