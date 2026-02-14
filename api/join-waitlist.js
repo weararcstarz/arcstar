@@ -57,7 +57,16 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ status: 'error', message: 'Please enter a valid email address' });
     }
 
-    const saveResult = await store.addOrResubscribe(name.trim(), normalizedEmail);
+    let saveResult;
+    try {
+      saveResult = await store.addOrResubscribe(name.trim(), normalizedEmail);
+    } catch (dbError) {
+      console.log('Subscriber store error:', dbError.message);
+      return res.status(500).json({
+        status: 'error',
+        message: 'Database connection error. Please verify DATABASE_POSTGRES_URL and redeploy.',
+      });
+    }
     if (saveResult.status === 'invalid') {
       return res.status(400).json({ status: 'error', message: 'Please enter a valid email address' });
     }
