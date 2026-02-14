@@ -12,7 +12,7 @@ body {
   background-color: #000000;
   background-image: url('/newwebbg.jpg');
   background-size: cover;
-  background-position: center;
+  background-position: center 72%;
   background-repeat: no-repeat;
   background-attachment: fixed;
   font-family: Arial, sans-serif;
@@ -181,6 +181,7 @@ body {
 @media (max-width: 768px) {
   body {
     background-image: url('/newebbgmobile.jpg');
+    background-position: center 76%;
     background-attachment: scroll;
   }
 
