@@ -62,9 +62,12 @@ module.exports = async function handler(req, res) {
       saveResult = await store.addOrResubscribe(name.trim(), normalizedEmail);
     } catch (dbError) {
       console.log('Subscriber store error:', dbError.message);
+      const details = String(dbError && dbError.message ? dbError.message : '').slice(0, 160);
       return res.status(500).json({
         status: 'error',
-        message: 'Database connection error. Please verify DATABASE_POSTGRES_URL and redeploy.',
+        message: details
+          ? `Database error: ${details}`
+          : 'Database connection error. Please verify your Postgres env vars and redeploy.',
       });
     }
     if (saveResult.status === 'invalid') {
