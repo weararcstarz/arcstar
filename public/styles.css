@@ -21,20 +21,20 @@ body {
 .overlay {
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  padding: 24px 16px 96px;
+  padding: 24px 16px 110px;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.72));
 }
 
 .container {
-  width: min(82vw, 300px);
-  margin-top: clamp(12vh, 16vh, 20vh);
+  width: min(78vw, 270px);
+  margin-bottom: clamp(40px, 7vh, 80px);
   text-align: center;
 }
 
 .brand {
-  font-size: clamp(1.55rem, 5.4vw, 2.25rem);
+  font-size: clamp(1.35rem, 4.8vw, 2rem);
   font-weight: 300;
   letter-spacing: 0.22em;
   margin-bottom: 0.3rem;
@@ -42,7 +42,7 @@ body {
 }
 
 .waitlist-text {
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   letter-spacing: 0.06em;
   margin-bottom: 1rem;
   opacity: 0.95;
@@ -51,7 +51,7 @@ body {
 .waitlist-form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
 }
 
 .email-input {
@@ -59,9 +59,9 @@ body {
   background: rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.55);
   color: #ffffff;
-  padding: 9px 10px;
-  border-radius: 8px;
-  font-size: 0.84rem;
+  padding: 8px 9px;
+  border-radius: 7px;
+  font-size: 0.78rem;
   outline: none;
   backdrop-filter: blur(4px);
 }
@@ -81,9 +81,9 @@ body {
   background: #ffffff;
   color: #111111;
   border: none;
-  padding: 9px 12px;
-  border-radius: 8px;
-  font-size: 0.98rem;
+  padding: 8px 10px;
+  border-radius: 7px;
+  font-size: 0.88rem;
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s ease;
@@ -184,37 +184,37 @@ body {
   }
 
   .overlay {
-    padding: 20px 14px 78px;
+    padding: 18px 12px 92px;
   }
 
   .container {
-    width: min(88vw, 280px);
-    margin-top: clamp(8vh, 12vh, 16vh);
+    width: min(84vw, 250px);
+    margin-bottom: clamp(44px, 8vh, 72px);
   }
 
   .brand {
-    font-size: clamp(1.35rem, 7vw, 1.9rem);
+    font-size: clamp(1.2rem, 6vw, 1.7rem);
     letter-spacing: 0.18em;
   }
 
   .waitlist-text {
-    font-size: 0.75rem;
+    font-size: 0.68rem;
   }
 
   .email-input {
-    padding: 8px 10px;
-    font-size: 0.8rem;
+    padding: 7px 9px;
+    font-size: 0.74rem;
   }
 
   .submit-btn {
-    font-size: 0.92rem;
-    padding: 8px 10px;
+    font-size: 0.82rem;
+    padding: 7px 9px;
   }
 }
 
 @media (max-width: 420px) {
   .container {
-    margin-top: 10vh;
+    margin-bottom: clamp(48px, 10vh, 74px);
   }
 
   .brand {
