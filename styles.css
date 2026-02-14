@@ -9,13 +9,18 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-image: url('/newwebbg.png');
+  background-color: #000000;
+  background-image: url('/bg.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
   font-family: Arial, sans-serif;
   color: #ffffff;
+}
+
+html.bg-ready body {
+  background-image: url('/newwebbg.png');
 }
 
 .overlay {
@@ -179,8 +184,11 @@ body {
 
 @media (max-width: 768px) {
   body {
-    background-image: url('/newebbgmobile.png');
     background-attachment: scroll;
+  }
+
+  html.bg-ready body {
+    background-image: url('/newebbgmobile.png');
   }
 
   .overlay {
