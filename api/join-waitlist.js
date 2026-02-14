@@ -33,6 +33,7 @@ module.exports = async function handler(req, res) {
 
     // Check environment variables
     const EMAIL_USER = process.env.EMAIL_USER || 'weararcstarz@gmail.com';
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL || EMAIL_USER;
     const EMAIL_PASS = process.env.EMAIL_PASS;
     const SMTP_SERVER = process.env.SMTP_SERVER || 'smtp.gmail.com';
     const SMTP_PORT = parseInt(process.env.SMTP_PORT || '587');
@@ -117,7 +118,7 @@ module.exports = async function handler(req, res) {
       // Send notification email to admin
       await transporter.sendMail({
         from: EMAIL_USER,
-        to: EMAIL_USER,
+        to: ADMIN_EMAIL,
         subject: '🎉 New Waitlist Signup - ARCSTARZ',
         html: `
           <!DOCTYPE html>
