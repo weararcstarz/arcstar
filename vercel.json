@@ -20,26 +20,22 @@
       ]
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "source": "/",
+      "destination": "/join-waitlist.html"
     },
     {
-      "src": "/",
-      "dest": "/join-waitlist.html"
+      "source": "/join-waitlist",
+      "destination": "/join-waitlist.html"
     },
     {
-      "src": "/join-waitlist",
-      "dest": "/join-waitlist.html"
+      "source": "/waitlist",
+      "destination": "/waitlist.html"
     },
     {
-      "src": "/waitlist",
-      "dest": "/waitlist.html"
-    },
-    {
-      "src": "/index",
-      "dest": "/index.html"
+      "source": "/index",
+      "destination": "/index.html"
     }
   ]
 }
