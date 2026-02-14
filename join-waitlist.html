@@ -6,19 +6,8 @@
     <title>ArcStarz | Premium Streetwear Brand</title>
     <meta name="description" content="ArcStarz is a premium minimalist streetwear brand offering high-quality fashion." />
     <meta name="robots" content="index, follow" />
-    <link rel="preload" as="image" href="/newwebbg.png" media="(min-width: 769px)" fetchpriority="high">
-    <link rel="preload" as="image" href="/newebbgmobile.png" media="(max-width: 768px)" fetchpriority="high">
-    <script>
-        (function () {
-            const isMobile = window.matchMedia('(max-width: 768px)').matches;
-            const bgSrc = isMobile ? '/newebbgmobile.png' : '/newwebbg.png';
-            const img = new Image();
-            img.src = bgSrc;
-            img.onload = function () {
-                document.documentElement.classList.add('bg-ready');
-            };
-        })();
-    </script>
+    <link rel="preload" as="image" href="/newwebbg.jpg" media="(min-width: 769px)" fetchpriority="high">
+    <link rel="preload" as="image" href="/newebbgmobile.jpg" media="(max-width: 768px)" fetchpriority="high">
     <link rel="stylesheet" href="/styles.css">
     
     <!-- Favicon and Web App Icons -->
@@ -168,4 +157,6 @@
     </script>
 </body>
 </html>
+
+
 
