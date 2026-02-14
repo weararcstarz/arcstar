@@ -20,4 +20,12 @@ app.get('/waitlist', (req, res) => {
   res.sendFile(path.join(__dirname, 'waitlist.html'));
 });
 
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+app.get('/admin.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
 module.exports = app;
