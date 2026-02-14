@@ -5,88 +5,225 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ARCSTARZ Admin</title>
   <style>
+    :root {
+      --bg: #0b0b0d;
+      --panel: #141419;
+      --panel-2: #1a1a21;
+      --text: #f5f5f7;
+      --muted: #a7a7b3;
+      --line: #2c2c34;
+      --accent: #ffffff;
+      --accent-text: #111111;
+      --danger: #ff7f7f;
+      --ok: #8df3bd;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #0d0d0d;
-      color: #f5f5f5;
+      background: radial-gradient(circle at 20% 0%, #1a1a22 0%, var(--bg) 45%);
+      color: var(--text);
     }
+
     .wrap {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 20px;
+      width: min(1100px, 95vw);
+      margin: 24px auto 40px;
     }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 0.04em;
+    }
+
+    .hero p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
     .card {
-      background: #171717;
-      border: 1px solid #2b2b2b;
-      border-radius: 10px;
+      background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+      border: 1px solid var(--line);
+      border-radius: 14px;
       padding: 16px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
     }
-    h1, h2 {
-      margin: 0 0 12px;
-      font-weight: 600;
-    }
+
+    .hidden { display: none; }
+
     .row {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
     }
-    input, textarea, button {
-      border-radius: 8px;
-      border: 1px solid #3a3a3a;
-      background: #111;
-      color: #f5f5f5;
-      padding: 10px;
-      font-size: 14px;
+
+    .row.space {
+      justify-content: space-between;
+      align-items: center;
     }
+
+    input, textarea, button {
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #0f0f14;
+      color: var(--text);
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+    }
+
     input, textarea {
       width: 100%;
-      box-sizing: border-box;
+      outline: none;
     }
+
+    input:focus, textarea:focus {
+      border-color: #767689;
+      box-shadow: 0 0 0 3px rgba(120, 120, 145, 0.24);
+    }
+
     button {
+      width: auto;
+      min-width: 120px;
       cursor: pointer;
-      background: #fff;
-      color: #111;
       border: none;
       font-weight: 600;
-      min-width: 120px;
+      background: var(--accent);
+      color: var(--accent-text);
     }
-    .muted {
-      color: #b3b3b3;
+
+    button.ghost {
+      background: #1d1d25;
+      color: #ffffff;
+      border: 1px solid #353545;
+    }
+
+    button.warn {
+      background: #311f22;
+      color: #ffd7d7;
+      border: 1px solid #4f2f35;
+    }
+
+    .status {
+      margin-top: 10px;
+      color: var(--muted);
       font-size: 13px;
+      min-height: 18px;
     }
-    .hidden {
-      display: none;
+
+    .status.ok { color: var(--ok); }
+    .status.err { color: var(--danger); }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
     }
+
+    .kpi {
+      background: #111118;
+      border: 1px solid #2a2a33;
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .kpi .label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .kpi .value {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .table-wrap {
+      max-height: 360px;
+      overflow: auto;
+      border: 1px solid #2a2a33;
+      border-radius: 10px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
     }
+
     th, td {
-      border-bottom: 1px solid #2a2a2a;
+      padding: 10px 8px;
+      border-bottom: 1px solid #24242c;
       text-align: left;
-      padding: 10px 6px;
-      vertical-align: top;
       word-break: break-word;
+      vertical-align: top;
+      background: #111118;
     }
-    .status {
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #181820;
+      color: #d7d7df;
+      font-weight: 600;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
       margin-top: 8px;
-      font-size: 13px;
-      color: #cfcfcf;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .hero { flex-direction: column; align-items: flex-start; }
+      .kpis { grid-template-columns: 1fr; }
+      .wrap { width: 94vw; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>ARCSTARZ Admin</h1>
-    <p class="muted">Private panel: view all waitlist emails and send one message to everyone.</p>
+    <div class="hero">
+      <div>
+        <h1>ARCSTARZ Admin</h1>
+        <p>Manage waitlist users and send branded email campaigns.</p>
+      </div>
+    </div>
 
     <div id="loginCard" class="card">
-      <h2>Login</h2>
-      <div class="row">
-        <input id="password" type="password" placeholder="Admin password">
+      <div class="row space">
+        <h2 style="margin:0;font-size:20px;">Admin Login</h2>
+      </div>
+      <div class="row" style="margin-top: 10px;">
+        <input id="password" type="password" placeholder="Enter admin password" autocomplete="current-password">
+      </div>
+      <div class="row" style="margin-top: 10px;">
         <button id="loginBtn">Login</button>
       </div>
       <div id="loginStatus" class="status"></div>
@@ -94,40 +231,73 @@
 
     <div id="panel" class="hidden">
       <div class="card">
-        <div class="row" style="justify-content: space-between; align-items: center;">
-          <h2 style="margin:0;">Subscribers</h2>
+        <div class="row space">
+          <h2 style="margin:0;font-size:20px;">Subscribers</h2>
           <div class="row">
-            <button id="refreshBtn">Refresh</button>
-            <button id="logoutBtn">Logout</button>
+            <button id="refreshBtn" class="ghost">Refresh</button>
+            <button id="logoutBtn" class="warn">Logout</button>
           </div>
         </div>
-        <p id="countText" class="muted">Count: 0</p>
-        <div style="overflow:auto;">
+
+        <div class="kpis">
+          <div class="kpi">
+            <div class="label">Total Subscribers</div>
+            <div id="kpiTotal" class="value">0</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Search Results</div>
+            <div id="kpiFiltered" class="value">0</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Latest Signup</div>
+            <div id="kpiLatest" class="value" style="font-size:14px;line-height:1.3;">-</div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-bottom:10px;">
+          <input id="searchInput" type="text" placeholder="Search by name or email...">
+        </div>
+
+        <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Signed Up</th>
+                <th style="width: 28%;">Name</th>
+                <th style="width: 40%;">Email</th>
+                <th style="width: 32%;">Signed Up</th>
               </tr>
             </thead>
             <tbody id="subscribersBody"></tbody>
           </table>
         </div>
+        <div id="tableStatus" class="status"></div>
       </div>
 
-      <div class="card">
-        <h2>Send Bulk Email</h2>
-        <div class="row">
-          <input id="subject" type="text" placeholder="Email subject">
+      <div class="grid-2">
+        <div class="card">
+          <h2 style="margin:0 0 10px;font-size:20px;">Bulk Email</h2>
+          <div class="row">
+            <input id="subject" type="text" placeholder="Campaign subject">
+          </div>
+          <div class="row" style="margin-top:10px;">
+            <textarea id="message" rows="10" placeholder="Write your update here. This sends as a branded HTML email with your logo."></textarea>
+          </div>
+          <div class="row" style="margin-top:10px;">
+            <button id="sendBtn">Send To All</button>
+          </div>
+          <div id="sendStatus" class="status"></div>
+          <div class="muted">Template is auto-styled in black/white minimal ARCSTARZ design with logo.</div>
         </div>
-        <div class="row" style="margin-top: 10px;">
-          <textarea id="message" rows="8" placeholder="Write your message to all subscribers..."></textarea>
+
+        <div class="card">
+          <h2 style="margin:0 0 10px;font-size:20px;">Add Historical Signups</h2>
+          <textarea id="importRows" rows="10" placeholder="Paste one per line:&#10;email@example.com&#10;Name,email@example.com"></textarea>
+          <div class="row" style="margin-top:10px;">
+            <button id="importBtn" class="ghost">Merge Into List</button>
+          </div>
+          <div id="importStatus" class="status"></div>
+          <div class="muted">Use this once to include old users who signed up before this admin panel existed.</div>
         </div>
-        <div class="row" style="margin-top: 10px;">
-          <button id="sendBtn">Send To All</button>
-        </div>
-        <div id="sendStatus" class="status"></div>
       </div>
     </div>
   </div>
@@ -135,23 +305,27 @@
   <script>
     const tokenKey = 'arcstarz_admin_token';
 
+    const state = {
+      subscribers: [],
+      filtered: [],
+    };
+
     const loginCard = document.getElementById('loginCard');
     const panel = document.getElementById('panel');
     const loginStatus = document.getElementById('loginStatus');
+    const tableStatus = document.getElementById('tableStatus');
     const sendStatus = document.getElementById('sendStatus');
+    const importStatus = document.getElementById('importStatus');
     const subscribersBody = document.getElementById('subscribersBody');
-    const countText = document.getElementById('countText');
 
-    function getToken() {
-      return sessionStorage.getItem(tokenKey) || '';
-    }
+    function getToken() { return sessionStorage.getItem(tokenKey) || ''; }
+    function setToken(token) { sessionStorage.setItem(tokenKey, token); }
+    function clearToken() { sessionStorage.removeItem(tokenKey); }
 
-    function setToken(token) {
-      sessionStorage.setItem(tokenKey, token);
-    }
-
-    function clearToken() {
-      sessionStorage.removeItem(tokenKey);
+    function setStatus(el, message, kind) {
+      el.textContent = message || '';
+      el.classList.remove('ok', 'err');
+      if (kind) el.classList.add(kind);
     }
 
     async function api(path, options = {}) {
@@ -167,27 +341,67 @@
     function setLoggedIn(yes) {
       loginCard.classList.toggle('hidden', yes);
       panel.classList.toggle('hidden', !yes);
+      if (!yes) {
+        setStatus(sendStatus, '');
+        setStatus(importStatus, '');
+        setStatus(tableStatus, '');
+      }
+    }
+
+    function formatWhen(ts) {
+      if (!ts) return '-';
+      const d = new Date(ts);
+      if (Number.isNaN(d.getTime())) return ts;
+      return d.toLocaleString();
+    }
+
+    function updateKpis() {
+      document.getElementById('kpiTotal').textContent = state.subscribers.length;
+      document.getElementById('kpiFiltered').textContent = state.filtered.length;
+      document.getElementById('kpiLatest').textContent = state.subscribers.length
+        ? formatWhen(state.subscribers[0].timestamp)
+        : '-';
     }
 
     function renderSubscribers(items) {
       subscribersBody.innerHTML = '';
+      if (!items.length) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td colspan="3" style="color:#a7a7b3;">No subscribers found.</td>';
+        subscribersBody.appendChild(tr);
+        return;
+      }
       items.forEach((item) => {
         const tr = document.createElement('tr');
-        const when = item.timestamp ? new Date(item.timestamp).toLocaleString() : '';
-        tr.innerHTML = `<td>${item.name || ''}</td><td>${item.email || ''}</td><td>${when}</td>`;
+        tr.innerHTML = `<td>${item.name || 'Subscriber'}</td><td>${item.email || ''}</td><td>${formatWhen(item.timestamp)}</td>`;
         subscribersBody.appendChild(tr);
       });
     }
 
+    function applySearch() {
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      if (!q) {
+        state.filtered = [...state.subscribers];
+      } else {
+        state.filtered = state.subscribers.filter((x) =>
+          String(x.name || '').toLowerCase().includes(q) || String(x.email || '').toLowerCase().includes(q)
+        );
+      }
+      renderSubscribers(state.filtered);
+      updateKpis();
+    }
+
     async function loadSubscribers() {
+      setStatus(tableStatus, 'Loading subscribers...');
       const result = await api('/api/admin', { method: 'GET' });
-      countText.textContent = `Count: ${result.count}`;
-      renderSubscribers(result.subscribers || []);
+      state.subscribers = Array.isArray(result.subscribers) ? result.subscribers : [];
+      applySearch();
+      setStatus(tableStatus, `Loaded ${state.subscribers.length} subscribers.`, 'ok');
     }
 
     document.getElementById('loginBtn').addEventListener('click', async () => {
       const password = document.getElementById('password').value;
-      loginStatus.textContent = 'Logging in...';
+      setStatus(loginStatus, 'Logging in...');
       try {
         const result = await api('/api/admin', {
           method: 'POST',
@@ -195,39 +409,60 @@
         });
         setToken(result.token);
         setLoggedIn(true);
-        loginStatus.textContent = '';
+        setStatus(loginStatus, '');
         await loadSubscribers();
       } catch (err) {
-        loginStatus.textContent = err.message;
+        setStatus(loginStatus, err.message || 'Login failed', 'err');
       }
+    });
+
+    document.getElementById('password').addEventListener('keydown', async (e) => {
+      if (e.key === 'Enter') document.getElementById('loginBtn').click();
     });
 
     document.getElementById('refreshBtn').addEventListener('click', async () => {
       try {
         await loadSubscribers();
       } catch (err) {
-        sendStatus.textContent = err.message;
+        setStatus(tableStatus, err.message || 'Failed to refresh', 'err');
       }
     });
 
     document.getElementById('logoutBtn').addEventListener('click', () => {
       clearToken();
       setLoggedIn(false);
-      sendStatus.textContent = '';
     });
 
+    document.getElementById('searchInput').addEventListener('input', applySearch);
+
     document.getElementById('sendBtn').addEventListener('click', async () => {
-      const subject = document.getElementById('subject').value;
-      const message = document.getElementById('message').value;
-      sendStatus.textContent = 'Sending...';
+      const subject = document.getElementById('subject').value.trim();
+      const message = document.getElementById('message').value.trim();
+      setStatus(sendStatus, 'Sending broadcast...');
       try {
         const result = await api('/api/admin', {
           method: 'POST',
           body: JSON.stringify({ action: 'send-broadcast', subject, message }),
         });
-        sendStatus.textContent = `Done. Sent: ${result.sent}, Failed: ${result.failed}`;
+        setStatus(sendStatus, `Done. Sent: ${result.sent}, Failed: ${result.failed}`, 'ok');
       } catch (err) {
-        sendStatus.textContent = err.message;
+        setStatus(sendStatus, err.message || 'Send failed', 'err');
+      }
+    });
+
+    document.getElementById('importBtn').addEventListener('click', async () => {
+      const rows = document.getElementById('importRows').value;
+      setStatus(importStatus, 'Merging subscribers...');
+      try {
+        const result = await api('/api/admin', {
+          method: 'POST',
+          body: JSON.stringify({ action: 'merge-subscribers', rows }),
+        });
+        setStatus(importStatus, `${result.message}. Total now: ${result.count}`, 'ok');
+        document.getElementById('importRows').value = '';
+        await loadSubscribers();
+      } catch (err) {
+        setStatus(importStatus, err.message || 'Merge failed', 'err');
       }
     });
 
