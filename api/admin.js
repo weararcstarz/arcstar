@@ -4,6 +4,12 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 
 const TOKEN_TTL_SECONDS = 60 * 60 * 8; // 8 hours
+const LOGIN_WINDOW_MS = 15 * 60 * 1000;
+const LOGIN_MAX_ATTEMPTS = 8;
+const API_WINDOW_MS = 60 * 1000;
+const API_MAX_REQUESTS = 120;
+const loginAttempts = new Map();
+const apiBursts = new Map();
 
 function json(res, status, body) {
   return res.status(status).json(body);
@@ -13,6 +19,48 @@ function setCors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+}
+
+function getClientIp(req) {
+  const fwd = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+  const real = String(req.headers['x-real-ip'] || '').trim();
+  return fwd || real || 'unknown';
+}
+
+function getOrInit(map, key, seed) {
+  const now = Date.now();
+  const item = map.get(key);
+  if (item && now - item.startedAt < seed.windowMs) return item;
+  const next = { startedAt: now, count: 0, lockedUntil: 0 };
+  map.set(key, next);
+  return next;
+}
+
+function checkApiRateLimit(ip) {
+  const entry = getOrInit(apiBursts, ip, { windowMs: API_WINDOW_MS });
+  entry.count += 1;
+  return entry.count <= API_MAX_REQUESTS;
+}
+
+function checkLoginAllowed(ip) {
+  const entry = getOrInit(loginAttempts, ip, { windowMs: LOGIN_WINDOW_MS });
+  const now = Date.now();
+  if (entry.lockedUntil && now < entry.lockedUntil) {
+    return { ok: false, retryAfter: Math.ceil((entry.lockedUntil - now) / 1000) };
+  }
+  return { ok: true };
+}
+
+function noteFailedLogin(ip) {
+  const entry = getOrInit(loginAttempts, ip, { windowMs: LOGIN_WINDOW_MS });
+  entry.count += 1;
+  if (entry.count >= LOGIN_MAX_ATTEMPTS) {
+    entry.lockedUntil = Date.now() + LOGIN_WINDOW_MS;
+  }
+}
+
+function resetLoginAttempts(ip) {
+  loginAttempts.delete(ip);
 }
 
 function getAdminPassword() {
@@ -90,13 +138,14 @@ function normalizeWaitlist(entries) {
       name: String(item.name || '').trim() || 'Subscriber',
       email,
       timestamp: item.timestamp || new Date().toISOString(),
+      unsubscribed: Boolean(item.unsubscribed),
     };
     if (!existing) {
       seen.set(email, clean);
       continue;
     }
-    // Keep the oldest signup timestamp when merging duplicates.
-    if (existing.timestamp > clean.timestamp) {
+    // Keep the latest state for duplicates.
+    if (existing.timestamp < clean.timestamp) {
       seen.set(email, clean);
     }
   }
@@ -119,6 +168,11 @@ function parseImportText(text) {
     }
   }
   return parsed;
+}
+
+function makeUnsubscribeToken(email, secret) {
+  const normalized = String(email || '').trim().toLowerCase();
+  return sign(normalized, secret);
 }
 
 function escapeHtml(input) {
@@ -158,7 +212,7 @@ async function sendBroadcast(subject, message, recipients) {
   const logoUrl = process.env.BRAND_LOGO_URL || `${baseUrl}/newwebicon.png`;
   const safeSubject = escapeHtml(subject);
   const safeMessage = escapeHtml(message).replace(/\r?\n/g, '<br>');
-  const html = `
+  const html = (recipient) => `
   <!DOCTYPE html>
   <html>
   <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -182,6 +236,10 @@ async function sendBroadcast(subject, message, recipients) {
             <tr>
               <td style="padding:18px 24px;border-top:1px solid #ededed;color:#7a7a7a;font-size:12px;line-height:1.6;">
                 You are receiving this because you joined the ARCSTARZ waitlist.
+                <br>
+                <a href="${baseUrl}/unsubscribe?email=${encodeURIComponent(recipient)}&token=${encodeURIComponent(
+    makeUnsubscribeToken(recipient, getTokenSecret())
+  )}" style="color:#666666;">Unsubscribe</a>
               </td>
             </tr>
           </table>
@@ -191,7 +249,10 @@ async function sendBroadcast(subject, message, recipients) {
   </body>
   </html>
   `;
-  const text = `ARCSTARZ\n\n${subject}\n\n${message}`;
+  const text = (recipient) =>
+    `ARCSTARZ\n\n${subject}\n\n${message}\n\nUnsubscribe: ${baseUrl}/unsubscribe?email=${encodeURIComponent(
+      recipient
+    )}&token=${encodeURIComponent(makeUnsubscribeToken(recipient, getTokenSecret()))}`;
 
   const results = [];
   for (const to of recipients) {
@@ -200,8 +261,8 @@ async function sendBroadcast(subject, message, recipients) {
         from: EMAIL_USER,
         to,
         subject,
-        html,
-        text,
+        html: html(to),
+        text: text(to),
       });
       results.push({ to, status: 'sent' });
     } catch (error) {
@@ -219,6 +280,11 @@ async function sendBroadcast(subject, message, recipients) {
 
 module.exports = async function handler(req, res) {
   setCors(res);
+  const ip = getClientIp(req);
+
+  if (!checkApiRateLimit(ip)) {
+    return json(res, 429, { status: 'error', message: 'Too many requests. Try again soon.' });
+  }
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
@@ -232,12 +298,23 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method === 'POST' && req.body && req.body.action === 'login') {
+    const gate = checkLoginAllowed(ip);
+    if (!gate.ok) {
+      return json(res, 429, {
+        status: 'error',
+        message: `Too many failed logins. Try again in ${gate.retryAfter}s.`,
+      });
+    }
     const password = String(req.body.password || '');
     const passBuf = Buffer.from(password);
     const adminBuf = Buffer.from(adminPassword);
     const valid =
       passBuf.length === adminBuf.length && crypto.timingSafeEqual(passBuf, adminBuf);
-    if (!valid) return json(res, 401, { status: 'error', message: 'Invalid password' });
+    if (!valid) {
+      noteFailedLogin(ip);
+      return json(res, 401, { status: 'error', message: 'Invalid password' });
+    }
+    resetLoginAttempts(ip);
     const token = makeToken(tokenSecret);
     return json(res, 200, { status: 'success', token });
   }
@@ -249,6 +326,20 @@ module.exports = async function handler(req, res) {
 
   if (req.method === 'GET') {
     const list = normalizeWaitlist(readWaitlist());
+    if (String(req.query && req.query.format || '').toLowerCase() === 'csv') {
+      const csv = [
+        'name,email,timestamp,unsubscribed',
+        ...list.map((x) =>
+          `"${String(x.name || '').replace(/"/g, '""')}","${String(x.email || '').replace(
+            /"/g,
+            '""'
+          )}","${String(x.timestamp || '').replace(/"/g, '""')}","${x.unsubscribed ? 'yes' : 'no'}"`
+        ),
+      ].join('\n');
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition', 'attachment; filename=\"arcstarz-subscribers.csv\"');
+      return res.status(200).send(csv);
+    }
     return json(res, 200, {
       status: 'success',
       count: list.length,
@@ -262,13 +353,10 @@ module.exports = async function handler(req, res) {
     if (!subject) return json(res, 400, { status: 'error', message: 'Subject is required' });
     if (!message) return json(res, 400, { status: 'error', message: 'Message is required' });
 
-    const recipients = Array.from(
-      new Set(
-        readWaitlist()
-          .map((x) => String(x.email || '').trim())
-          .filter((x) => x.includes('@'))
-      )
-    );
+    const recipients = normalizeWaitlist(readWaitlist())
+      .filter((x) => !x.unsubscribed)
+      .map((x) => String(x.email || '').trim())
+      .filter((x) => x.includes('@'));
 
     if (!recipients.length) {
       return json(res, 400, { status: 'error', message: 'No subscribers found' });

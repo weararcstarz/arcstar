@@ -2,6 +2,27 @@ const nodemailer = require('nodemailer');
 const fs = require('fs');
 const path = require('path');
 
+const WINDOW_MS = 60 * 1000;
+const MAX_REQUESTS_PER_IP = 12;
+const requestBursts = new Map();
+
+function getClientIp(req) {
+  const fwd = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+  const real = String(req.headers['x-real-ip'] || '').trim();
+  return fwd || real || 'unknown';
+}
+
+function isRateLimited(ip) {
+  const now = Date.now();
+  const current = requestBursts.get(ip);
+  if (!current || now - current.startedAt >= WINDOW_MS) {
+    requestBursts.set(ip, { startedAt: now, count: 1 });
+    return false;
+  }
+  current.count += 1;
+  return current.count > MAX_REQUESTS_PER_IP;
+}
+
 // Simple handler without complex error handling
 module.exports = async function handler(req, res) {
   try {
@@ -20,14 +41,20 @@ module.exports = async function handler(req, res) {
       return res.status(405).json({ status: 'error', message: 'Method not allowed' });
     }
 
+    const ip = getClientIp(req);
+    if (isRateLimited(ip)) {
+      return res.status(429).json({ status: 'error', message: 'Too many requests. Please wait a minute.' });
+    }
+
     const { name, email } = req.body;
+    const normalizedEmail = String(email || '').trim().toLowerCase();
 
     // Basic validation
     if (!name || name.trim().length < 2) {
       return res.status(400).json({ status: 'error', message: 'Name must be at least 2 characters long' });
     }
 
-    if (!email || !email.includes('@')) {
+    if (!normalizedEmail || !normalizedEmail.includes('@')) {
       return res.status(400).json({ status: 'error', message: 'Please enter a valid email address' });
     }
 
@@ -59,7 +86,7 @@ module.exports = async function handler(req, res) {
       // Send beautiful welcome email to user
       await transporter.sendMail({
         from: EMAIL_USER,
-        to: email,
+        to: normalizedEmail,
         subject: 'Welcome to ARCSTARZ Waitlist!',
         html: `
           <!DOCTYPE html>
@@ -189,17 +216,25 @@ module.exports = async function handler(req, res) {
     }
 
     // Check for duplicate
-    if (waitlistData.find(entry => entry.email === email)) {
-      return res.status(409).json({ status: 'error', message: 'This email is already on the waitlist' });
+    const existing = waitlistData.find(entry => String(entry.email || '').trim().toLowerCase() === normalizedEmail);
+    if (existing) {
+      if (existing.unsubscribed) {
+        existing.unsubscribed = false;
+        existing.name = name.trim();
+        existing.timestamp = new Date().toISOString();
+      } else {
+        return res.status(409).json({ status: 'error', message: 'This email is already on the waitlist' });
+      }
+    } else {
+      // Add new entry
+      waitlistData.push({
+        id: Date.now(),
+        name: name.trim(),
+        email: normalizedEmail,
+        timestamp: new Date().toISOString(),
+        unsubscribed: false,
+      });
     }
-
-    // Add new entry
-    waitlistData.push({
-      id: Date.now(),
-      name: name.trim(),
-      email: email.trim(),
-      timestamp: new Date().toISOString(),
-    });
 
     // Save file
     try {

@@ -38,6 +38,10 @@
       "destination": "/admin.html"
     },
     {
+      "source": "/unsubscribe",
+      "destination": "/unsubscribe.html"
+    },
+    {
       "source": "/index",
       "destination": "/index.html"
     }

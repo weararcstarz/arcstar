@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARCSTARZ Unsubscribe</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #0c0c0f;
+      color: #f4f4f6;
+      font-family: Arial, sans-serif;
+      padding: 16px;
+    }
+    .card {
+      width: min(460px, 92vw);
+      background: #16161c;
+      border: 1px solid #2a2a33;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 { margin: 0 0 8px; font-size: 22px; }
+    p { margin: 0 0 12px; color: #b4b4be; }
+    .status { min-height: 18px; margin-top: 10px; }
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #fff;
+      color: #111;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Unsubscribe</h1>
+    <p>Click below to stop receiving ARCSTARZ waitlist emails.</p>
+    <button id="btn">Unsubscribe Me</button>
+    <div id="status" class="status"></div>
+  </div>
+  <script>
+    function getParam(name) {
+      return new URLSearchParams(location.search).get(name) || '';
+    }
+    const email = getParam('email');
+    const token = getParam('token');
+    const statusEl = document.getElementById('status');
+    const btn = document.getElementById('btn');
+
+    btn.addEventListener('click', async () => {
+      if (!email || !token) {
+        statusEl.textContent = 'Invalid unsubscribe link.';
+        return;
+      }
+      statusEl.textContent = 'Processing...';
+      try {
+        const res = await fetch('/api/unsubscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, token }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Request failed');
+        statusEl.textContent = data.message || 'Unsubscribed.';
+        btn.disabled = true;
+      } catch (err) {
+        statusEl.textContent = err.message || 'Failed to unsubscribe.';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -28,4 +28,12 @@ app.get('/admin.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
+app.get('/unsubscribe', (req, res) => {
+  res.sendFile(path.join(__dirname, 'unsubscribe.html'));
+});
+
+app.get('/unsubscribe.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'unsubscribe.html'));
+});
+
 module.exports = app;

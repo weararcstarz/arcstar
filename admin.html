@@ -245,8 +245,8 @@
             <div id="kpiTotal" class="value">0</div>
           </div>
           <div class="kpi">
-            <div class="label">Search Results</div>
-            <div id="kpiFiltered" class="value">0</div>
+            <div class="label">Active Subscribers</div>
+            <div id="kpiActive" class="value">0</div>
           </div>
           <div class="kpi">
             <div class="label">Latest Signup</div>
@@ -254,17 +254,19 @@
           </div>
         </div>
 
-        <div class="row" style="margin-bottom:10px;">
+        <div class="row" style="margin-bottom:10px; align-items:center;">
           <input id="searchInput" type="text" placeholder="Search by name or email...">
+          <button id="exportBtn" class="ghost">Export CSV</button>
         </div>
 
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th style="width: 28%;">Name</th>
-                <th style="width: 40%;">Email</th>
-                <th style="width: 32%;">Signed Up</th>
+                <th style="width: 24%;">Name</th>
+                <th style="width: 34%;">Email</th>
+                <th style="width: 22%;">Signed Up</th>
+                <th style="width: 20%;">Status</th>
               </tr>
             </thead>
             <tbody id="subscribersBody"></tbody>
@@ -357,7 +359,7 @@
 
     function updateKpis() {
       document.getElementById('kpiTotal').textContent = state.subscribers.length;
-      document.getElementById('kpiFiltered').textContent = state.filtered.length;
+      document.getElementById('kpiActive').textContent = state.subscribers.filter((x) => !x.unsubscribed).length;
       document.getElementById('kpiLatest').textContent = state.subscribers.length
         ? formatWhen(state.subscribers[0].timestamp)
         : '-';
@@ -367,13 +369,13 @@
       subscribersBody.innerHTML = '';
       if (!items.length) {
         const tr = document.createElement('tr');
-        tr.innerHTML = '<td colspan="3" style="color:#a7a7b3;">No subscribers found.</td>';
+        tr.innerHTML = '<td colspan="4" style="color:#a7a7b3;">No subscribers found.</td>';
         subscribersBody.appendChild(tr);
         return;
       }
       items.forEach((item) => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${item.name || 'Subscriber'}</td><td>${item.email || ''}</td><td>${formatWhen(item.timestamp)}</td>`;
+        tr.innerHTML = `<td>${item.name || 'Subscriber'}</td><td>${item.email || ''}</td><td>${formatWhen(item.timestamp)}</td><td>${item.unsubscribed ? 'Unsubscribed' : 'Active'}</td>`;
         subscribersBody.appendChild(tr);
       });
     }
@@ -434,6 +436,29 @@
     });
 
     document.getElementById('searchInput').addEventListener('input', applySearch);
+
+    document.getElementById('exportBtn').addEventListener('click', async () => {
+      try {
+        const token = getToken();
+        const res = await fetch('/api/admin?format=csv', {
+          method: 'GET',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error('Failed to export CSV');
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `arcstarz-subscribers-${new Date().toISOString().slice(0,10)}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        setStatus(tableStatus, 'CSV exported.', 'ok');
+      } catch (err) {
+        setStatus(tableStatus, err.message || 'Export failed', 'err');
+      }
+    });
 
     document.getElementById('sendBtn').addEventListener('click', async () => {
       const subject = document.getElementById('subject').value.trim();
