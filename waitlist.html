@@ -9,17 +9,13 @@
     <link rel="stylesheet" href="/styles.css">
     
     <!-- Favicon and Web App Icons -->
-    <link rel="icon" type="image/png" href="/webicon.png">
-    <link rel="apple-touch-icon" href="/webicon.png">
-    <link rel="shortcut icon" href="/webicon.png">
+    <link rel="icon" type="image/png" href="/newwebicon.png">
+    <link rel="apple-touch-icon" href="/newwebicon.png">
+    <link rel="shortcut icon" href="/newwebicon.png">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#000000">
 </head>
 <body>
-    <video class="video-background" autoplay muted loop playsinline preload="auto">
-        <source src="/background.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
     <div class="overlay">
         <div class="container">
             <h1 class="brand">ARCSTARZ</h1>
@@ -66,27 +62,6 @@
     </div>
 
     <script>
-        // Force video playback on mobile
-        document.addEventListener('DOMContentLoaded', function() {
-            const video = document.querySelector('.video-background');
-            if (video) {
-                // Try to play video
-                video.play().catch(function(error) {
-                    console.log('Video autoplay failed:', error);
-                    // Add click to play for mobile
-                    document.body.addEventListener('click', function() {
-                        video.play().catch(e => console.log('Video play failed:', e));
-                    }, { once: true });
-                });
-                
-                // Ensure video loops
-                video.addEventListener('ended', function() {
-                    video.currentTime = 0;
-                    video.play().catch(e => console.log('Video replay failed:', e));
-                });
-            }
-        });
-        
         document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             

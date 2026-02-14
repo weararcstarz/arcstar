@@ -9,41 +9,12 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background: #000 !important;
+  background-image: url('/newwebbg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   font-family: Arial, sans-serif;
   overflow-x: hidden;
-}
-
-.video-background {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  z-index: -1 !important;
-  background: #000 !important;
-}
-
-/* Mobile video optimizations */
-@media (pointer: coarse) and (hover: none) {
-  .video-background {
-    transform: none !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    object-fit: cover !important;
-  }
-}
-
-/* iOS video fix */
-@supports (-webkit-touch-callout: none) {
-  .video-background {
-    -webkit-transform: none !important;
-    transform: none !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    object-fit: cover !important;
-  }
 }
 
 .overlay {
@@ -198,19 +169,10 @@ body {
     height: 100vh !important;
     margin: 0 !important;
     padding: 0 !important;
-    background: #000 !important;
-  }
-  
-  .video-background {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    object-fit: cover !important;
-    z-index: -1 !important;
-    background: #000 !important;
-    transform: none !important;
+    background-image: url('/newebbgmobile.png') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
   }
   
   .overlay {
@@ -281,19 +243,10 @@ body {
     height: 100vh !important;
     margin: 0 !important;
     padding: 0 !important;
-    background: #000 !important;
-  }
-  
-  .video-background {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    object-fit: cover !important;
-    z-index: -1 !important;
-    background: #000 !important;
-    transform: none !important;
+    background-image: url('/newebbgmobile.png') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
   }
   
   .overlay {

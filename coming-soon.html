@@ -6,18 +6,25 @@
     <title>ARCSTARZ - Coming Soon</title>
     <meta name="google-site-verification" content="wsk5nZmB8seXAyrMCzFv7yATIMaan1NyK07GOKtHTP4">
     <link rel="manifest" href="/manifest.json">
-    <link rel="icon" href="/webicon.png" type="image/png">
+    <link rel="icon" href="/newwebicon.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            background-image: url('bg.png');
+            background-image: url('/newwebbg.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                background-image: url('/newebbgmobile.png');
+                background-attachment: scroll;
+            }
         }
         
         .overlay {
