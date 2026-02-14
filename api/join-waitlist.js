@@ -1,6 +1,5 @@
 const nodemailer = require('nodemailer');
-const fs = require('fs');
-const path = require('path');
+const store = require('../lib/subscriber-store');
 
 const WINDOW_MS = 60 * 1000;
 const MAX_REQUESTS_PER_IP = 12;
@@ -56,6 +55,14 @@ module.exports = async function handler(req, res) {
 
     if (!normalizedEmail || !normalizedEmail.includes('@')) {
       return res.status(400).json({ status: 'error', message: 'Please enter a valid email address' });
+    }
+
+    const saveResult = await store.addOrResubscribe(name.trim(), normalizedEmail);
+    if (saveResult.status === 'invalid') {
+      return res.status(400).json({ status: 'error', message: 'Please enter a valid email address' });
+    }
+    if (saveResult.status === 'duplicate') {
+      return res.status(409).json({ status: 'error', message: 'This email is already on the waitlist' });
     }
 
     // Check environment variables
@@ -200,47 +207,6 @@ module.exports = async function handler(req, res) {
     } catch (emailError) {
       console.log('Email error:', emailError.message);
       // Continue even if email fails
-    }
-
-    // Save to waitlist file
-    const waitlistFile = path.join(process.cwd(), 'waitlist.json');
-    let waitlistData = [];
-    
-    try {
-      if (fs.existsSync(waitlistFile)) {
-        const data = fs.readFileSync(waitlistFile, 'utf8');
-        waitlistData = JSON.parse(data);
-      }
-    } catch (fileError) {
-      console.log('File read error:', fileError.message);
-    }
-
-    // Check for duplicate
-    const existing = waitlistData.find(entry => String(entry.email || '').trim().toLowerCase() === normalizedEmail);
-    if (existing) {
-      if (existing.unsubscribed) {
-        existing.unsubscribed = false;
-        existing.name = name.trim();
-        existing.timestamp = new Date().toISOString();
-      } else {
-        return res.status(409).json({ status: 'error', message: 'This email is already on the waitlist' });
-      }
-    } else {
-      // Add new entry
-      waitlistData.push({
-        id: Date.now(),
-        name: name.trim(),
-        email: normalizedEmail,
-        timestamp: new Date().toISOString(),
-        unsubscribed: false,
-      });
-    }
-
-    // Save file
-    try {
-      fs.writeFileSync(waitlistFile, JSON.stringify(waitlistData, null, 2));
-    } catch (fileError) {
-      console.log('File write error:', fileError.message);
     }
 
     // Return success

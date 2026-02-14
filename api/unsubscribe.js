@@ -1,6 +1,5 @@
 const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
+const store = require('../lib/subscriber-store');
 
 function json(res, status, body) {
   return res.status(status).json(body);
@@ -13,23 +12,6 @@ function getSecret() {
 
 function sign(value, secret) {
   return crypto.createHmac('sha256', secret).update(value).digest('base64url');
-}
-
-function readWaitlist() {
-  const waitlistFile = path.join(process.cwd(), 'waitlist.json');
-  if (!fs.existsSync(waitlistFile)) return [];
-  try {
-    const raw = fs.readFileSync(waitlistFile, 'utf8');
-    const data = JSON.parse(raw);
-    return Array.isArray(data) ? data : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeWaitlist(data) {
-  const waitlistFile = path.join(process.cwd(), 'waitlist.json');
-  fs.writeFileSync(waitlistFile, JSON.stringify(data, null, 2));
 }
 
 module.exports = async function handler(req, res) {
@@ -58,16 +40,8 @@ module.exports = async function handler(req, res) {
     tokenBuf.length === expectedBuf.length && crypto.timingSafeEqual(tokenBuf, expectedBuf);
   if (!valid) return json(res, 401, { status: 'error', message: 'Invalid unsubscribe link' });
 
-  const list = readWaitlist();
-  const match = list.find((x) => String(x.email || '').trim().toLowerCase() === email);
-  if (!match) return json(res, 404, { status: 'error', message: 'Subscriber not found' });
-
-  match.unsubscribed = true;
-  try {
-    writeWaitlist(list);
-  } catch {
-    return json(res, 500, { status: 'error', message: 'Failed to update subscription' });
-  }
+  const unsub = await store.unsubscribeEmail(email);
+  if (!unsub.ok) return json(res, 404, { status: 'error', message: unsub.message || 'Subscriber not found' });
 
   return json(res, 200, { status: 'success', message: 'You have been unsubscribed.' });
 };

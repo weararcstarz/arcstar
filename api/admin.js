@@ -1,7 +1,6 @@
 const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
 const nodemailer = require('nodemailer');
+const store = require('../lib/subscriber-store');
 
 const TOKEN_TTL_SECONDS = 60 * 60 * 8; // 8 hours
 const LOGIN_WINDOW_MS = 15 * 60 * 1000;
@@ -107,49 +106,6 @@ function parseToken(token, secret) {
   } catch {
     return null;
   }
-}
-
-function readWaitlist() {
-  const waitlistFile = path.join(process.cwd(), 'waitlist.json');
-  if (!fs.existsSync(waitlistFile)) return [];
-  try {
-    const raw = fs.readFileSync(waitlistFile, 'utf8');
-    const data = JSON.parse(raw);
-    if (!Array.isArray(data)) return [];
-    return data;
-  } catch {
-    return [];
-  }
-}
-
-function writeWaitlist(data) {
-  const waitlistFile = path.join(process.cwd(), 'waitlist.json');
-  fs.writeFileSync(waitlistFile, JSON.stringify(data, null, 2));
-}
-
-function normalizeWaitlist(entries) {
-  const seen = new Map();
-  for (const item of entries || []) {
-    const email = String(item.email || '').trim().toLowerCase();
-    if (!email || !email.includes('@')) continue;
-    const existing = seen.get(email);
-    const clean = {
-      id: item.id || Date.now(),
-      name: String(item.name || '').trim() || 'Subscriber',
-      email,
-      timestamp: item.timestamp || new Date().toISOString(),
-      unsubscribed: Boolean(item.unsubscribed),
-    };
-    if (!existing) {
-      seen.set(email, clean);
-      continue;
-    }
-    // Keep the latest state for duplicates.
-    if (existing.timestamp < clean.timestamp) {
-      seen.set(email, clean);
-    }
-  }
-  return Array.from(seen.values()).sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
 }
 
 function parseImportText(text) {
@@ -325,7 +281,7 @@ module.exports = async function handler(req, res) {
   if (!payload) return json(res, 401, { status: 'error', message: 'Unauthorized' });
 
   if (req.method === 'GET') {
-    const list = normalizeWaitlist(readWaitlist());
+    const list = await store.getAllSubscribers();
     if (String(req.query && req.query.format || '').toLowerCase() === 'csv') {
       const csv = [
         'name,email,timestamp,unsubscribed',
@@ -353,7 +309,7 @@ module.exports = async function handler(req, res) {
     if (!subject) return json(res, 400, { status: 'error', message: 'Subject is required' });
     if (!message) return json(res, 400, { status: 'error', message: 'Message is required' });
 
-    const recipients = normalizeWaitlist(readWaitlist())
+    const recipients = (await store.getAllSubscribers())
       .filter((x) => !x.unsubscribed)
       .map((x) => String(x.email || '').trim())
       .filter((x) => x.includes('@'));
@@ -378,26 +334,16 @@ module.exports = async function handler(req, res) {
     if (!imports.length) {
       return json(res, 400, { status: 'error', message: 'No rows found to import' });
     }
-    const current = readWaitlist();
-    const merged = normalizeWaitlist([
-      ...current,
-      ...imports.map((x) => ({
-        id: Date.now() + Math.floor(Math.random() * 9999),
-        name: x.name || 'Subscriber',
-        email: x.email || '',
-        timestamp: new Date().toISOString(),
-      })),
-    ]);
     try {
-      writeWaitlist(merged);
+      const merged = await store.mergeSubscribers(imports);
+      return json(res, 200, {
+        status: 'success',
+        message: 'Subscribers merged',
+        count: merged.count,
+      });
     } catch (error) {
       return json(res, 500, { status: 'error', message: 'Failed to save merged subscribers' });
     }
-    return json(res, 200, {
-      status: 'success',
-      message: 'Subscribers merged',
-      count: merged.length,
-    });
   }
 
   return json(res, 405, { status: 'error', message: 'Method not allowed' });
