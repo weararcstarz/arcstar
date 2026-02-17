@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArcStarz | Premium Streetwear Brand</title>
-    <meta name="description" content="ArcStarz is a premium minimalist streetwear brand offering high-quality fashion." />
+    <title>ARCSTARZ | Join Waitlist</title>
+    <meta name="description" content="Join the ARCSTARZ waitlist for early access, promo codes, and launch updates in Kenya and beyond." />
     <meta name="robots" content="index, follow" />
     <link rel="preload" as="image" href="/newwebbg.jpg" media="(min-width: 769px)" fetchpriority="high">
     <link rel="preload" as="image" href="/newebbgmobile.jpg" media="(max-width: 768px)" fetchpriority="high">
@@ -35,6 +35,10 @@
                     name="email" 
                     class="email-input" 
                     placeholder="Your Email" 
+                    inputmode="email"
+                    autocomplete="email"
+                    pattern="^[^@ ]+@[^@ ]+\.[^@ ]{2,}$"
+                    title="Please enter a valid email address."
                     required
                 >
                 <button type="submit" class="submit-btn">Join</button>
@@ -77,6 +81,10 @@
         console.log('Form elements found:', { form, successMsg, errorMsg, errorText });
         
         if (form) {
+            function isValidEmail(value) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(value || '').trim());
+            }
+
             form.addEventListener('submit', async function(e) {
                 console.log('Form submitted!');
                 e.preventDefault();
@@ -87,6 +95,7 @@
                 const formData = new FormData(form);
                 const name = formData.get('name');
                 const email = formData.get('email');
+                const normalizedEmail = String(email || '').trim().toLowerCase();
                 
                 console.log('Form data:', { name, email });
                 
@@ -95,6 +104,14 @@
                 submitBtn.innerHTML = '<span class="loading"></span>';
                 successMsg.style.display = 'none';
                 errorMsg.style.display = 'none';
+
+                if (!isValidEmail(normalizedEmail)) {
+                    errorText.textContent = 'Please enter a valid email address.';
+                    errorMsg.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Join';
+                    return;
+                }
                 
                 try {
                     console.log('Sending API request...');
@@ -105,7 +122,7 @@
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ name, email }),
+                        body: JSON.stringify({ name, email: normalizedEmail }),
                     });
                     
                     console.log('API response received:', response.status);
@@ -120,7 +137,7 @@
                         form.style.display = 'none';
                         
                         // Log success
-                        console.log('Waitlist signup successful:', { name, email });
+                        console.log('Waitlist signup successful:', { name, email: normalizedEmail });
                         console.log('Success message element:', successMsg);
                         console.log('Success message display style:', successMsg.style.display);
                         
