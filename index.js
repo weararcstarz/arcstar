@@ -28,6 +28,10 @@ app.get('/admin.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
+app.get('/stl', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
 app.get('/unsubscribe', (req, res) => {
   res.sendFile(path.join(__dirname, 'unsubscribe.html'));
 });
