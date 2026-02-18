@@ -427,7 +427,9 @@
     }
 
     body.login-mode {
-      background: #050505;
+      background:
+        linear-gradient(180deg, rgba(5, 5, 5, 0.82) 0%, rgba(5, 5, 5, 0.9) 100%),
+        url('/adminpagebg.png') center center / cover no-repeat fixed;
     }
 
     body.login-mode .container {
@@ -464,7 +466,33 @@
       width: 100%;
     }
 
+    .login-minimal p {
+      margin: 0 0 10px;
+      text-align: center;
+      color: #d8d8d8;
+      font-size: 12px;
+      letter-spacing: 0.02em;
+    }
+
+    body.login-mode .login-open-btn {
+      width: 100%;
+      height: 44px;
+      border-radius: 12px;
+      border: 1px solid #2e2e2e;
+      background: rgba(11, 11, 11, 0.85);
+      color: #f0f0f0;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    body.login-mode .login-open-btn:hover {
+      background: rgba(16, 16, 16, 0.9);
+      border-color: #3c3c3c;
+    }
+
     body.login-mode .login-minimal input {
+      margin-top: 8px;
       height: 54px;
       text-align: center;
       border: 1px solid #2e2e2e;
@@ -568,7 +596,9 @@
 
     <div id="loginCard" class="card login-shell">
       <div class="login-minimal">
-        <input id="password" type="password" placeholder="Enter admin password" autocomplete="current-password">
+        <p>Are you ARCSTARZ owner or employee?</p>
+        <button id="openLoginBtn" class="login-open-btn" type="button">Enter Password</button>
+        <input id="password" class="hidden" type="password" placeholder="Enter admin password" autocomplete="current-password">
         <div id="loginStatus" class="status login-status"></div>
       </div>
     </div>
@@ -663,6 +693,8 @@
     const sendStatus = document.getElementById('sendStatus');
     const importStatus = document.getElementById('importStatus');
     const subscribersBody = document.getElementById('subscribersBody');
+    const passwordInput = document.getElementById('password');
+    const openLoginBtn = document.getElementById('openLoginBtn');
 
     function getToken() { return sessionStorage.getItem(tokenKey) || ''; }
     function setToken(token) { sessionStorage.setItem(tokenKey, token); }
@@ -672,6 +704,13 @@
       el.textContent = message || '';
       el.classList.remove('ok', 'err');
       if (kind) el.classList.add(kind);
+    }
+
+    function resetLoginView() {
+      passwordInput.value = '';
+      passwordInput.classList.add('hidden');
+      openLoginBtn.textContent = 'Enter Password';
+      setStatus(loginStatus, '');
     }
 
     async function api(path, options = {}) {
@@ -689,6 +728,7 @@
       panel.classList.toggle('hidden', !yes);
       document.body.classList.toggle('login-mode', !yes);
       if (!yes) {
+        resetLoginView();
         setStatus(sendStatus, '');
         setStatus(importStatus, '');
         setStatus(tableStatus, '');
@@ -770,11 +810,23 @@
       }
     }
 
-    const passwordInput = document.getElementById('password');
+    openLoginBtn.addEventListener('click', async () => {
+      if (passwordInput.classList.contains('hidden')) {
+        passwordInput.classList.remove('hidden');
+        passwordInput.focus();
+        openLoginBtn.textContent = 'Login';
+        return;
+      }
+      await attemptLogin();
+    });
+
     passwordInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') attemptLogin();
     });
-    passwordInput.addEventListener('input', () => setStatus(loginStatus, ''));
+    passwordInput.addEventListener('input', () => {
+      setStatus(loginStatus, '');
+      openLoginBtn.textContent = passwordInput.value.trim() ? 'Login' : 'Enter Password';
+    });
 
     document.getElementById('refreshBtn').addEventListener('click', async () => {
       try {
