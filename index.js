@@ -21,11 +21,11 @@ app.get('/waitlist', (req, res) => {
 });
 
 app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
+  res.status(404).send('Not Found');
 });
 
 app.get('/admin.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
+  res.status(404).send('Not Found');
 });
 
 app.get('/stl', (req, res) => {

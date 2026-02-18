@@ -1,17 +1,5 @@
 {
   "version": 2,
-  "redirects": [
-    {
-      "source": "/admin",
-      "destination": "/stl",
-      "permanent": true
-    },
-    {
-      "source": "/admin.html",
-      "destination": "/stl",
-      "permanent": true
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)\\.(png|jpg|jpeg|webp|avif|svg|ico|css|js|woff2?)",
